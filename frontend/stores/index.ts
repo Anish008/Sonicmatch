@@ -301,32 +301,40 @@ interface RecommendationsState {
 
 export const useRecommendationsStore = create<RecommendationsState>()(
   devtools(
-    (set, get) => ({
-      session: null,
-      compareList: [],
-      isLoading: false,
-      error: null,
-      
-      setSession: (session) => set({ session, isLoading: false, error: null }),
-      
-      setLoading: (isLoading) => set({ isLoading }),
-      
-      setError: (error) => set({ error, isLoading: false }),
-      
-      addToCompare: (id) => set((state) => {
-        if (state.compareList.includes(id)) return state;
-        if (state.compareList.length >= 4) return state; // Max 4 to compare
-        return { compareList: [...state.compareList, id] };
+    persist(
+      (set, get) => ({
+        session: null,
+        compareList: [],
+        isLoading: false,
+        error: null,
+
+        setSession: (session) => set({ session, isLoading: false, error: null }),
+
+        setLoading: (isLoading) => set({ isLoading }),
+
+        setError: (error) => set({ error, isLoading: false }),
+
+        addToCompare: (id) => set((state) => {
+          if (state.compareList.includes(id)) return state;
+          if (state.compareList.length >= 4) return state; // Max 4 to compare
+          return { compareList: [...state.compareList, id] };
+        }),
+
+        removeFromCompare: (id) => set((state) => ({
+          compareList: state.compareList.filter((cId) => cId !== id),
+        })),
+
+        clearCompare: () => set({ compareList: [] }),
+
+        clearSession: () => set({ session: null, compareList: [] }),
       }),
-      
-      removeFromCompare: (id) => set((state) => ({
-        compareList: state.compareList.filter((cId) => cId !== id),
-      })),
-      
-      clearCompare: () => set({ compareList: [] }),
-      
-      clearSession: () => set({ session: null, compareList: [] }),
-    }),
+      {
+        name: 'sonicmatch-recommendations',
+        partialize: (state) => ({
+          compareList: state.compareList,
+        }),
+      }
+    ),
     { name: 'RecommendationsStore' }
   )
 );

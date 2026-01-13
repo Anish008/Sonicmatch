@@ -8,6 +8,7 @@ import {
   getAudioProfileFromGenres,
   getHeadphoneAudioProfile,
 } from './dataService';
+import { getHeadphoneImageUrl } from './headphoneImages';
 
 // ============================================
 // Matching Algorithm
@@ -58,7 +59,7 @@ export async function findHeadphoneMatches(
       hasAnc: item.headphone.noise_cancellation === 'Yes',
       priceUsd: item.headphone.price,
       priceTier: getPriceTier(item.headphone.price),
-      imageUrl: getPlaceholderImage(item.headphone.brand),
+      imageUrl: item.headphone.image_url || getHeadphoneImageUrl(item.headphone.brand, item.headphone.model, item.headphone.type),
       soundSignature: item.headphone.sound_profile,
       description: generateDescription(item.headphone, preferences),
       keyFeatures: generateKeyFeatures(item.headphone),
@@ -294,11 +295,6 @@ function getPriceTier(price: number): string {
   if (price < 300) return 'Mid-range';
   if (price < 600) return 'Premium';
   return 'Flagship';
-}
-
-function getPlaceholderImage(brand: string): string {
-  // Generate a placeholder image URL based on brand
-  return `https://ui-avatars.com/api/?name=${encodeURIComponent(brand)}&size=400&background=FF2D55&color=fff&bold=true`;
 }
 
 function generateDescription(headphone: HeadphoneData, preferences: UserPreferences): string {
