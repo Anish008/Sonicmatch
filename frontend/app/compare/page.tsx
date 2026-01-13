@@ -144,8 +144,11 @@ export default function ComparePage() {
                     const rating = hp.user_rating || hp.userRating || 0;
                     const hpType = hp.type || hp.headphoneType || 'over-ear';
 
-                    // Get image URL from various possible sources
-                    const imageUrl = hp.image_url || hp.imageUrl || getHeadphoneImageUrl(brand, model, hpType);
+                    // Get image URL from various possible sources, skip broken rtings.com URLs
+                    const rawImageUrl = hp.image_url || hp.imageUrl;
+                    const imageUrl = (rawImageUrl && !rawImageUrl.includes('rtings.com'))
+                      ? rawImageUrl
+                      : getHeadphoneImageUrl(brand, model, hpType);
 
                     return (
                       <th key={hpId} className="p-4 min-w-[200px]">

@@ -9,10 +9,6 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'i.rtings.com',
-      },
-      {
-        protocol: 'https',
         hostname: 'ui-avatars.com',
       },
     ],

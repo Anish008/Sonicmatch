@@ -59,7 +59,9 @@ export async function findHeadphoneMatches(
       hasAnc: item.headphone.noise_cancellation === 'Yes',
       priceUsd: item.headphone.price,
       priceTier: getPriceTier(item.headphone.price),
-      imageUrl: item.headphone.image_url || getHeadphoneImageUrl(item.headphone.brand, item.headphone.model, item.headphone.type),
+      imageUrl: (item.headphone.image_url && !item.headphone.image_url.includes('rtings.com'))
+        ? item.headphone.image_url
+        : getHeadphoneImageUrl(item.headphone.brand, item.headphone.model, item.headphone.type),
       soundSignature: item.headphone.sound_profile,
       description: generateDescription(item.headphone, preferences),
       keyFeatures: generateKeyFeatures(item.headphone),

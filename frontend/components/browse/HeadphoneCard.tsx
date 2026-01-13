@@ -20,8 +20,13 @@ export function HeadphoneCard({ headphone, index, onClick }: HeadphoneCardProps)
 
   const isInCompareList = compareList.includes(headphone.headphone_id.toString());
 
-  // Use the CSV image_url if available, otherwise fall back to utility function
-  const csvImageUrl = headphone.image_url && headphone.image_url.startsWith('http') ? headphone.image_url : null;
+  // Use fallback images - CSV rtings.com URLs are broken
+  // Skip rtings.com URLs as they return 404
+  const csvImageUrl = headphone.image_url &&
+    headphone.image_url.startsWith('http') &&
+    !headphone.image_url.includes('rtings.com')
+    ? headphone.image_url
+    : null;
   const primaryImage = csvImageUrl || getHeadphoneImageUrl(headphone.brand, headphone.model, headphone.type);
   const searchUrl = getHeadphoneSearchUrl(headphone.brand, headphone.model);
 

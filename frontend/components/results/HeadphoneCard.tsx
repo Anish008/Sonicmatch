@@ -30,8 +30,10 @@ export function HeadphoneCard({ match, isTopPick = false, isInCompare = false, o
   };
   const displayType = typeMap[headphone.headphoneType] || 'over-ear';
 
-  // Use imageUrl from headphone data if available, otherwise fall back to utility
-  const primaryImage = (headphone.imageUrl && headphone.imageUrl.startsWith('http'))
+  // Use imageUrl from headphone data if available, skip broken rtings.com URLs
+  const primaryImage = (headphone.imageUrl &&
+    headphone.imageUrl.startsWith('http') &&
+    !headphone.imageUrl.includes('rtings.com'))
     ? headphone.imageUrl
     : getHeadphoneImageUrl(headphone.brand, headphone.model, displayType);
   const searchUrl = getHeadphoneSearchUrl(headphone.brand, headphone.model);
