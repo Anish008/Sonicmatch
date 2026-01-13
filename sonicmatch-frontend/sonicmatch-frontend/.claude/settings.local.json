@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(npm start)",
+      "Bash(dir /b /a-d \"C:\\\\Project\\\\Sonicmatch\\\\sonicmatch-frontend\\\\sonicmatch-frontend\")",
+      "Bash(docker-compose up:*)",
+      "Bash(docker compose:*)"
+    ]
+  }
+}

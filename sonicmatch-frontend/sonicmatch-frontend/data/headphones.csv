@@ -1,0 +1,121 @@
+headphone_id,brand,model,price,type,use_case,bass_level,sound_profile,noise_cancellation,user_rating,user_reviews
+1,Sony,WH-1000XM5,399,Over-ear,Casual,Medium,Balanced,Yes,4.7,15234
+2,Bose,QuietComfort 45,329,Over-ear,Casual,Medium,Balanced,Yes,4.5,12847
+3,Apple,AirPods Max,549,Over-ear,Casual,Low,Balanced,Yes,4.4,9876
+4,Sennheiser,HD 660S,499,Over-ear,Studio,Low,Flat,No,4.6,3421
+5,Audio-Technica,ATH-M50x,149,Over-ear,Studio,Medium,Flat,No,4.6,18923
+6,Beats,Studio Pro,349,Over-ear,Workout,High,Bass-heavy,Yes,4.3,5678
+7,Sony,WH-CH720N,149,Over-ear,Casual,Medium,Balanced,Yes,4.4,8234
+8,Beyerdynamic,DT 770 PRO,159,Over-ear,Studio,Medium,Flat,No,4.7,11234
+9,Shure,SRH440A,99,Over-ear,Studio,Low,Flat,No,4.4,4567
+10,JBL,TUNE 760NC,129,Over-ear,Workout,High,Bass-heavy,Yes,4.2,6789
+11,Bose,QuietComfort Ultra,429,Over-ear,Casual,Medium,Balanced,Yes,4.6,7890
+12,Sony,WH-1000XM4,348,Over-ear,Casual,Medium,Balanced,Yes,4.7,22341
+13,Sennheiser,Momentum 4,379,Over-ear,Casual,Medium,Balanced,Yes,4.5,5432
+14,AKG,K371,149,Over-ear,Studio,Medium,Flat,No,4.5,3890
+15,Audio-Technica,ATH-M70x,299,Over-ear,Studio,Low,Flat,No,4.5,2345
+16,Beats,Solo 3,199,On-ear,Workout,High,Bass-heavy,No,4.3,9876
+17,Bose,SoundLink II,229,On-ear,Casual,Medium,Balanced,No,4.4,6543
+18,Skullcandy,Crusher Evo,199,Over-ear,Workout,High,Bass-heavy,No,4.3,4321
+19,JBL,Live 660NC,199,Over-ear,Casual,High,Bass-heavy,Yes,4.2,5678
+20,Sony,MDR-7506,99,Over-ear,Studio,Low,Flat,No,4.7,16789
+21,Beyerdynamic,DT 990 PRO,169,Over-ear,Studio,Low,Flat,No,4.6,8901
+22,Sennheiser,HD 600,399,Over-ear,Studio,Low,Flat,No,4.8,13456
+23,Audio-Technica,ATH-M40x,99,Over-ear,Studio,Medium,Flat,No,4.5,12345
+24,Focal,Bathys,799,Over-ear,Studio,Low,Flat,Yes,4.6,1234
+25,Master & Dynamic,MW75,599,Over-ear,Casual,Medium,Balanced,Yes,4.4,2345
+26,Bang & Olufsen,Beoplay H95,799,Over-ear,Casual,Low,Balanced,Yes,4.5,1876
+27,Bowers & Wilkins,PX7 S2,399,Over-ear,Casual,Medium,Balanced,Yes,4.5,4567
+28,Jabra,Elite 85h,249,Over-ear,Casual,Medium,Balanced,Yes,4.3,7890
+29,Anker,Soundcore Life Q35,129,Over-ear,Casual,High,Bass-heavy,Yes,4.4,9876
+30,Razer,Barracuda Pro,249,Over-ear,Gaming,High,Bass-heavy,Yes,4.3,5432
+31,HyperX,Cloud Alpha,99,Over-ear,Gaming,High,Bass-heavy,No,4.6,14567
+32,SteelSeries,Arctis Nova Pro,349,Over-ear,Gaming,Medium,Balanced,Yes,4.5,6789
+33,Logitech,G Pro X,129,Over-ear,Gaming,Medium,Balanced,No,4.4,8901
+34,Corsair,Virtuoso RGB,179,Over-ear,Gaming,High,Bass-heavy,No,4.3,4567
+35,Grado,SR325x,295,On-ear,Studio,Low,Flat,No,4.5,2345
+36,Focal,Clear Mg,1490,Over-ear,Studio,Low,Flat,No,4.8,876
+37,Audeze,LCD-X,1199,Over-ear,Studio,Low,Flat,No,4.7,1234
+38,HIFIMAN,Sundara,349,Over-ear,Studio,Low,Flat,No,4.6,5678
+39,Philips,SHP9500,79,Over-ear,Studio,Low,Flat,No,4.5,11234
+40,OneOdio,Pro-50,39,Over-ear,Studio,Medium,Flat,No,4.1,6789
+41,Sony,WH-XB910N,248,Over-ear,Workout,High,Bass-heavy,Yes,4.3,7890
+42,JBL,Club One,349,Over-ear,Casual,High,Bass-heavy,Yes,4.2,3456
+43,Marshall,Major IV,149,On-ear,Casual,High,Bass-heavy,No,4.3,5678
+44,Beats,Studio Buds Plus,169,In-ear,Workout,High,Bass-heavy,Yes,4.2,8901
+45,Bose,Sport Earbuds,179,In-ear,Workout,High,Bass-heavy,No,4.3,6789
+46,Jaybird,Vista 2,199,In-ear,Workout,High,Bass-heavy,No,4.2,3456
+47,Shokz,OpenRun Pro,179,Bone-conduction,Workout,Low,Balanced,No,4.5,4567
+48,AfterShokz,Aeropex,159,Bone-conduction,Workout,Low,Balanced,No,4.4,5678
+49,Urbanears,Pampas,149,Over-ear,Casual,Medium,Balanced,Yes,4.1,2345
+50,Status,Between Pro,399,Over-ear,Studio,Low,Flat,Yes,4.4,1234
+51,V-MODA,Crossfade M-100,249,Over-ear,Studio,High,Bass-heavy,No,4.4,4567
+52,Monoprice,Monolith M570,349,Over-ear,Studio,Low,Flat,No,4.3,2345
+53,Koss,Porta Pro,49,On-ear,Casual,Medium,Balanced,No,4.3,8901
+54,AKG,K240,69,Over-ear,Studio,Low,Flat,No,4.4,7890
+55,Yamaha,YH-5000SE,4999,Over-ear,Studio,Low,Flat,No,4.9,234
+56,Denon,AH-D5200,599,Over-ear,Studio,Medium,Balanced,No,4.5,1234
+57,Audio-Technica,ATH-AD900x,149,Over-ear,Studio,Low,Flat,No,4.4,3456
+58,Grado,SR80x,125,On-ear,Studio,Low,Flat,No,4.5,5678
+59,Sony,MDR-Z7M2,599,Over-ear,Studio,Medium,Balanced,No,4.5,2345
+60,Sennheiser,HD 800 S,1699,Over-ear,Studio,Low,Flat,No,4.9,1876
+61,Sony,WF-1000XM5,299,In-ear,Casual,Medium,Balanced,Yes,4.6,11234
+62,Apple,AirPods Pro 2,249,In-ear,Casual,Low,Balanced,Yes,4.7,19876
+63,Samsung,Galaxy Buds2 Pro,229,In-ear,Casual,Medium,Balanced,Yes,4.4,9876
+64,Jabra,Elite 7 Pro,199,In-ear,Workout,Medium,Balanced,Yes,4.3,6789
+65,Anker,Soundcore Liberty 4,149,In-ear,Casual,High,Bass-heavy,Yes,4.4,7890
+66,Bose,QuietComfort Earbuds II,299,In-ear,Casual,Medium,Balanced,Yes,4.5,8901
+67,Sony,LinkBuds S,199,In-ear,Casual,Medium,Balanced,Yes,4.3,5678
+68,Nothing,Ear 2,149,In-ear,Casual,Medium,Balanced,Yes,4.2,4567
+69,Google,Pixel Buds Pro,199,In-ear,Casual,Medium,Balanced,Yes,4.1,6789
+70,Beats,Fit Pro,199,In-ear,Workout,High,Bass-heavy,Yes,4.4,8901
+71,Sennheiser,Momentum True Wireless 3,279,In-ear,Casual,Medium,Balanced,Yes,4.5,5678
+72,JBL,Live Pro 2,149,In-ear,Workout,High,Bass-heavy,Yes,4.2,4567
+73,Technics,EAH-AZ60,229,In-ear,Casual,Medium,Balanced,Yes,4.4,3456
+74,Edifier,W820NB,59,Over-ear,Casual,High,Bass-heavy,Yes,4.2,9876
+75,Cowin,E7,69,Over-ear,Casual,High,Bass-heavy,Yes,4.0,8901
+76,TaoTronics,SoundSurge 60,59,Over-ear,Casual,High,Bass-heavy,Yes,4.0,7890
+77,1MORE,SonoFlow,99,Over-ear,Casual,Medium,Balanced,Yes,4.3,6789
+78,Soundcore,Space Q45,149,Over-ear,Casual,Medium,Balanced,Yes,4.5,10234
+79,Cleer,Enduro ANC,179,Over-ear,Casual,Medium,Balanced,Yes,4.2,3456
+80,Mixcder,E9,79,Over-ear,Casual,High,Bass-heavy,Yes,3.9,5678
+81,Treblab,Z2,89,Over-ear,Workout,High,Bass-heavy,No,4.0,4567
+82,Mpow,H21,69,Over-ear,Casual,High,Bass-heavy,Yes,4.0,6789
+83,Status,Audio Between 3ANC,149,Over-ear,Casual,Medium,Balanced,Yes,4.1,3456
+84,Ausounds,AU-Stream Hybrid,299,Over-ear,Casual,Medium,Balanced,Yes,4.2,2345
+85,KEF,Mu3,249,In-ear,Casual,Low,Balanced,Yes,4.4,3456
+86,Devialet,Gemini,349,In-ear,Casual,Low,Balanced,Yes,4.3,2345
+87,Master & Dynamic,MW08,299,In-ear,Casual,Medium,Balanced,Yes,4.4,3456
+88,Bang & Olufsen,Beoplay EX,399,In-ear,Casual,Low,Balanced,Yes,4.5,2345
+89,Bowers & Wilkins,PI7 S2,399,In-ear,Casual,Medium,Balanced,Yes,4.4,3456
+90,Cambridge Audio,Melomania 1 Plus,129,In-ear,Casual,Medium,Balanced,No,4.3,4567
+91,Noble,FoKus Pro,449,In-ear,Studio,Low,Flat,Yes,4.6,1234
+92,Campfire,Audio Ara,1299,In-ear,Studio,Low,Flat,No,4.7,876
+93,Shure,AONIC 50,299,Over-ear,Studio,Low,Flat,Yes,4.5,3456
+94,Shure,AONIC 40,249,Over-ear,Studio,Low,Flat,Yes,4.4,4567
+95,AKG,N700NC M2,299,Over-ear,Casual,Medium,Balanced,Yes,4.3,4567
+96,Harman Kardon,FLY ANC,199,Over-ear,Casual,Medium,Balanced,Yes,4.2,3456
+97,JBL,Tour One M2,299,Over-ear,Casual,High,Bass-heavy,Yes,4.3,5678
+98,Sony,INZONE H9,299,Over-ear,Gaming,High,Bass-heavy,Yes,4.4,6789
+99,Razer,Opus X,99,Over-ear,Gaming,High,Bass-heavy,Yes,4.1,5678
+100,Turtle Beach,Stealth 700,149,Over-ear,Gaming,High,Bass-heavy,No,4.2,6789
+101,SteelSeries,Arctis 7,179,Over-ear,Gaming,Medium,Balanced,No,4.5,9876
+102,Logitech,G733,129,Over-ear,Gaming,High,Bass-heavy,No,4.3,7890
+103,Razer,BlackShark V2,99,Over-ear,Gaming,High,Bass-heavy,No,4.4,11234
+104,HyperX,Cloud II,99,Over-ear,Gaming,High,Bass-heavy,No,4.5,13456
+105,Corsair,HS80 RGB,129,Over-ear,Gaming,High,Bass-heavy,No,4.2,6789
+106,Astro,A50,299,Over-ear,Gaming,High,Bass-heavy,No,4.3,5678
+107,SteelSeries,Arctis Pro Wireless,329,Over-ear,Gaming,Medium,Balanced,No,4.4,4567
+108,Logitech,G Pro X Wireless,199,Over-ear,Gaming,Medium,Balanced,No,4.4,7890
+109,Razer,Kraken V3 Pro,199,Over-ear,Gaming,High,Bass-heavy,Yes,4.2,5678
+110,HyperX,Cloud Flight S,159,Over-ear,Gaming,High,Bass-heavy,No,4.3,4567
+111,Turtle Beach,Elite Pro 2,199,Over-ear,Gaming,High,Bass-heavy,No,4.2,3456
+112,Corsair,Void RGB Elite,99,Over-ear,Gaming,High,Bass-heavy,No,4.1,6789
+113,EPOS,H6Pro,179,Over-ear,Gaming,Medium,Balanced,No,4.5,5678
+114,Audeze,Penrose,299,Over-ear,Gaming,Low,Flat,No,4.4,2345
+115,Drop,PC38X,169,Over-ear,Gaming,Medium,Balanced,No,4.7,8901
+116,Audio-Technica,ATH-G1,169,Over-ear,Gaming,Medium,Balanced,No,4.3,3456
+117,Beyerdynamic,MMX 300,299,Over-ear,Gaming,Medium,Flat,No,4.6,2345
+118,Sennheiser,GSP 670,349,Over-ear,Gaming,Medium,Balanced,No,4.4,3456
+119,ROCCAT,Elo 7.1 Air,99,Over-ear,Gaming,High,Bass-heavy,No,4.0,4567
+120,Cooler Master,MH-670,119,Over-ear,Gaming,High,Bass-heavy,No,4.1,3456
