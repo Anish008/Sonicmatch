@@ -1,388 +1,610 @@
-# Sonicmatch Backend - Intelligent Recommendation Engine
+# SonicMatch Backend
 
-Hybrid ML + LLM-powered headphone recommendation system using music taste analysis.
+AI-powered headphone recommendation engine built with FastAPI, PostgreSQL, Redis, and LLM integration (Claude/OpenAI).
 
-## Architecture
+## 🎯 Overview
 
-**3-Layer Intelligence:**
-1. **Feature Engineering**: Extracts audio profile from Spotify track features
-2. **Rule-Based Algorithm**: Weighted scoring with similarity matching (0-100 scale)
-3. **LLM Refinement**: Claude API for contextual intelligence and explanations
+Production-grade backend API for personalized headphone recommendations using Large Language Models. The system analyzes user music preferences, listening habits, and requirements to match them with the perfect headphones from a curated catalog.
 
-## Setup
+## ✅ Implementation Status
+
+### Completed Features
+
+- ✅ **Complete FastAPI Application**
+  - Async/await throughout for high concurrency
+  - CORS middleware configured for frontend
+  - Structured JSON logging with contextual info
+  - Global exception handling
+  - Request/response validation
+  - Health check endpoints
+
+- ✅ **Database Layer (PostgreSQL + SQLAlchemy 2.0)**
+  - 6 production models: Headphone, UserPreference, RecommendationSession, HeadphoneMatch, User, AnalyticsEvent
+  - Async session management with connection pooling
+  - Comprehensive indexing strategy
+  - JSON fields for flexible data structures
+  - Alembic migrations configured
+
+- ✅ **LLM Integration**
+  - Unified client supporting Claude (Anthropic) and OpenAI
+  - Structured output with JSON mode
+  - Retry logic with exponential backoff
+  - Timeout handling (30s default)
+  - Token usage tracking
+  - Error fallbacks
+
+- ✅ **Recommendation Engine**
+  - Full LLM-based matching pipeline
+  - Multi-dimensional scoring (6 metrics: overall, genre_match, sound_profile, use_case, budget, feature_match)
+  - Personalized explanations, pros/cons
+  - Candidate filtering by hard constraints
+  - Match highlights generation
+
+- ✅ **API Endpoints (v1)**
+  - `POST /api/v1/recommend` - Generate recommendations (sync/async modes)
+  - `GET /api/v1/recommendations/{session_id}` - Retrieve session results
+  - `POST /api/v1/explain` - Detailed match explanation
+  - `GET /api/v1/headphones` - Browse catalog with filters
+  - `GET /health`, `/health/ready`, `/health/live` - Monitoring
+
+- ✅ **Redis Caching**
+  - Session caching (1hr TTL)
+  - Headphone catalog caching (10min TTL)
+  - Query result caching (5min TTL)
+  - Rate limit counters
+  - Automatic cache invalidation
+
+- ✅ **Rate Limiting**
+  - Per-endpoint limits using SlowAPI
+  - IP-based tracking
+  - Configurable thresholds:
+    - `/recommend`: 10 req/min
+    - `/explain`: 20 req/min
+    - `/headphones`: 100 req/min
+
+- ✅ **Background Jobs (Celery)**
+  - Async recommendation processing
+  - Redis broker and result backend
+  - Task timeout and retry configuration
+  - Scheduled cleanup tasks (30-day session retention)
+  - Flower monitoring support
+
+- ✅ **Seed Data**
+  - 28 real headphones across all price tiers
+  - Budget: Sennheiser HD 560S, Philips SHP9500, etc.
+  - Mid-range: Beyerdynamic DT 770 Pro, Audio-Technica M50xBT
+  - Premium: Sony WH-1000XM5, Sennheiser Momentum 4
+  - Flagship: Apple AirPods Max, Focal Clear MG, Audeze LCD-2
+  - Complete specs, sound profiles, target genres
+  - Seed script ready (`seeds/seed_db.py`)
+
+- ✅ **Docker Deployment**
+  - Multi-service docker-compose.yml
+  - Services: API, Celery worker, PostgreSQL, Redis, Nginx, Flower
+  - Health checks for all services
+  - Volume persistence
+  - Production and monitoring profiles
+  - Optimized Dockerfile with multi-stage build
+
+- ✅ **Security**
+  - Input sanitization via Pydantic
+  - CORS configuration
+  - Rate limiting
+  - Environment variable isolation
+  - SQL injection protection (ORM)
+  - LLM call protection (dedup, timeout, budget)
+
+- ✅ **Configuration & Documentation**
+  - Pydantic Settings with `.env` support
+  - Comprehensive `.env.example`
+  - Type-safe configuration
+  - This README with setup instructions
+
+### Remaining (Optional Enhancements)
+
+- ⏳ **Comprehensive Test Suite**
+  - Unit tests for services
+  - Integration tests for API endpoints
+  - Test fixtures and mocks
+  - Coverage reporting
+
+- ⏳ **JWT Authentication** (Phase 2)
+  - User registration/login
+  - Protected endpoints
+  - Session ownership validation
+
+- ⏳ **Advanced Analytics**
+  - Usage metrics dashboard
+  - A/B testing framework
+  - Recommendation quality tracking
+
+## 📁 Project Structure
+
+```
+sonicmatch-backend/
+├── app/
+│   ├── main.py                    # FastAPI application entry
+│   ├── config.py                  # Pydantic Settings
+│   ├── api/
+│   │   └── v1/
+│   │       ├── router.py          # Main v1 router
+│   │       ├── recommendations.py # Recommendation endpoints
+│   │       ├── explain.py         # Explanation endpoint
+│   │       └── headphones.py      # Catalog endpoints
+│   ├── core/
+│   │   ├── cache.py               # Redis wrapper
+│   │   ├── exceptions.py          # Custom exceptions
+│   │   └── security.py            # Auth utilities
+│   ├── db/
+│   │   ├── base.py                # SQLAlchemy base
+│   │   └── session.py             # DB session management
+│   ├── models/
+│   │   ├── headphone.py           # Headphone catalog
+│   │   ├── preference.py          # User preferences
+│   │   ├── recommendation.py      # Sessions & matches
+│   │   ├── user.py                # User accounts
+│   │   └── analytics.py           # Analytics events
+│   ├── schemas/
+│   │   ├── headphone.py           # Headphone schemas
+│   │   ├── preference.py          # Preference schemas
+│   │   ├── recommendation.py      # Recommendation schemas
+│   │   └── common.py              # Shared types
+│   ├── services/
+│   │   ├── llm_client.py          # Claude/OpenAI client
+│   │   └── recommendation_engine.py # Matching logic
+│   ├── tasks/
+│   │   ├── celery_app.py          # Celery configuration
+│   │   └── recommendation_tasks.py # Background tasks
+│   └── utils/
+│       └── validators.py          # Validation helpers
+├── migrations/
+│   ├── env.py                     # Alembic config
+│   ├── script.py.mako             # Migration template
+│   └── versions/                  # Migration files
+├── seeds/
+│   ├── headphones.json            # 28 real headphones
+│   └── seed_db.py                 # Seeding script
+├── docker/
+│   ├── nginx.conf                 # Nginx config
+│   └── .dockerignore              # Docker ignore rules
+├── tests/
+│   └── conftest.py                # Test fixtures
+├── Dockerfile                     # Container image
+├── docker-compose.yml             # Multi-service orchestration
+├── requirements.txt               # Python dependencies
+├── pyproject.toml                 # Poetry config
+├── alembic.ini                    # Alembic config
+├── .env.example                   # Environment template
+└── README.md                      # This file
+```
+
+## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.10+
-- Anthropic API key (for LLM features)
 
-### Installation
+- Python 3.11+
+- PostgreSQL 15+ (or use Docker)
+- Redis 7+ (or use Docker)
+- Claude API key (Anthropic) or OpenAI API key
 
-```bash
-# Create virtual environment
-python -m venv venv
+### Option 1: Docker (Recommended)
 
-# Activate virtual environment
-# Windows:
-venv\Scripts\activate
-# macOS/Linux:
-source venv/bin/activate
+1. **Clone and configure**:
+   ```bash
+   cd sonicmatch-backend
+   cp .env.example .env
+   # Edit .env with your API keys
+   ```
 
-# Install dependencies
-pip install -r requirements.txt
-```
+2. **Start all services**:
+   ```bash
+   docker-compose up -d
+   ```
 
-### Environment Variables
+3. **Run migrations and seed**:
+   ```bash
+   docker-compose exec api alembic upgrade head
+   docker-compose exec api python seeds/seed_db.py
+   ```
 
-Create a `.env` file in the backend directory:
+4. **Access**:
+   - API: `http://localhost:8000`
+   - Docs: `http://localhost:8000/docs`
+   - Flower (Celery): `http://localhost:5555` (with monitoring profile)
 
-```env
-ANTHROPIC_API_KEY=your_api_key_here
-```
+### Option 2: Local Development
 
-Or set as environment variable:
-```bash
-# Windows
-set ANTHROPIC_API_KEY=your_api_key_here
+1. **Create virtual environment**:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Windows: venv\Scripts\activate
+   ```
 
-# macOS/Linux
-export ANTHROPIC_API_KEY=your_api_key_here
-```
+2. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### Data Files
+3. **Configure environment**:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your database, Redis, and API keys
+   ```
 
-The backend expects CSV files at:
-- `../sonicmatch-frontend/sonicmatch-frontend/public/data/headphones.csv`
-- `../sonicmatch-frontend/sonicmatch-frontend/public/data/spotify_songs.csv`
+4. **Start PostgreSQL and Redis**:
+   ```bash
+   # Using Docker:
+   docker run -d --name postgres -p 5432:5432 -e POSTGRES_DB=sonicmatch -e POSTGRES_USER=sonicmatch -e POSTGRES_PASSWORD=password postgres:15-alpine
+   docker run -d --name redis -p 6379:6379 redis:7-alpine
+   ```
 
-Update paths in `app/main.py` lines 112 and 122 if your data is located elsewhere.
+5. **Run migrations**:
+   ```bash
+   alembic upgrade head
+   ```
 
-## Running the Server
+6. **Seed database**:
+   ```bash
+   python seeds/seed_db.py
+   ```
 
-```bash
-# Development (with auto-reload)
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+7. **Start API server**:
+   ```bash
+   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+   ```
 
-# Production
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
-```
+8. **Start Celery worker** (separate terminal):
+   ```bash
+   celery -A app.tasks.celery_app worker -l info --concurrency=2
+   ```
 
-Server will be available at: `http://localhost:8000`
+9. **Access**:
+   - API: `http://localhost:8000`
+   - Docs: `http://localhost:8000/docs`
+   - Health: `http://localhost:8000/health`
 
-API documentation: `http://localhost:8000/docs`
+## 📊 Database Schema
 
-## API Endpoints
+### Headphone Model
+- Product catalog with specifications
+- Sound signature profiles (bass, mids, treble, soundstage, detail)
+- Pricing and tier categorization
+- Target genres and use cases
+- Features (wireless, ANC, type)
 
-### Health Check
-```
-GET /
-```
+### UserPreference Model
+- Music taste (genres, artists, tracks)
+- Sound preferences (0-1 scale for each dimension)
+- Budget range and requirements
+- Primary/secondary use cases
+- Listening environment
 
-Returns server status and loaded data counts.
+### RecommendationSession Model
+- Track recommendation requests
+- LLM provider/model metadata
+- Processing status (pending, processing, complete, error)
+- Processing time tracking
 
-### Get Recommendations
-```
-POST /api/recommendations
-```
+### HeadphoneMatch Model
+- Individual recommendations with ranking
+- 6-dimensional scoring:
+  - Overall match score
+  - Genre match score
+  - Sound profile match score
+  - Use case match score
+  - Budget match score
+  - Feature match score
+- LLM-generated explanation
+- Personalized pros/cons
+- Match highlights
 
-**Request Body:**
-```json
+### User Model (Optional - Phase 2)
+- Authentication and authorization
+- User profile and history
+
+### AnalyticsEvent Model
+- Usage tracking
+- Event metadata
+- Session correlation
+
+## 🎯 API Endpoints
+
+### Recommendations
+
+```http
+POST /api/v1/recommend
+Content-Type: application/json
+
 {
-  "genres": ["hip_hop", "r&b", "pop"],
-  "favorite_artists": ["The Weeknd", "Dua Lipa"],
-  "favorite_tracks": [
-    {"name": "Blinding Lights", "artist": "The Weeknd"},
-    {"name": "Levitating", "artist": "Dua Lipa"}
-  ],
-  "sound_preferences": {
-    "bass": 0.8,
-    "mids": 0.6,
-    "treble": 0.5,
-    "soundstage": 0.6,
-    "detail": 0.7
-  },
-  "primary_use_case": "casual",
-  "budget_min": 100,
-  "budget_max": 400,
-  "anc_required": true,
-  "wireless_required": false,
-  "use_llm_refinement": true
+  "preferences": {
+    "genres": ["rock", "jazz"],
+    "favorite_artists": ["Pink Floyd", "Miles Davis"],
+    "sound_preferences": {
+      "bass": 0.6,
+      "mids": 0.8,
+      "treble": 0.7,
+      "soundstage": 0.9,
+      "detail": 0.8
+    },
+    "budget_min": 200,
+    "budget_max": 500,
+    "primary_use_case": "critical_listening"
+  }
 }
-```
 
-**Response:**
-```json
+Response: 200 OK
 {
-  "recommendations": [
+  "session_id": "uuid",
+  "status": "complete",
+  "matches": [
     {
       "rank": 1,
-      "headphone": {
-        "id": 123,
-        "brand": "Sony",
-        "model": "WH-1000XM5",
-        "price": 399.99,
-        "sound_profile": "Balanced",
-        "rating": 4.7
-      },
-      "scores": {
-        "overall": 87.5,
-        "sound_profile": 92.0,
-        "use_case": 100.0
-      },
-      "match_highlights": [
-        "Excellent balanced sound signature match",
-        "Strong bass response matches your preference",
-        "Highly rated: 4.7/5"
-      ],
-      "trade_offs": [],
-      "confidence": 0.85
+      "headphone": {...},
+      "overall_score": 0.92,
+      "scores": {...},
+      "explanation": "...",
+      "personalized_pros": [...],
+      "personalized_cons": [...],
+      "match_highlights": [...]
     }
   ],
-  "user_profile": {
-    "bass_preference": 0.82,
-    "mids_preference": 0.65,
-    "treble_preference": 0.58,
-    "sound_signature": "Warm/Bass-forward"
-  },
-  "llm_insights": {
-    "top_pick_explanation": "The Sony WH-1000XM5 excels with hip-hop and R&B...",
-    "key_insights": [
-      "Strong sub-bass extension (20-60Hz) for hip-hop production",
-      "Wide soundstage benefits pop's layered production"
-    ]
-  },
-  "metadata": {
-    "total_candidates": 150,
-    "matched": 10,
-    "llm_used": true
-  }
+  "processing_time_ms": 1234
 }
 ```
 
-### Compare Headphones
-```
-POST /api/compare
+```http
+GET /api/v1/recommendations/{session_id}
+
+Response: 200 OK (same as above)
 ```
 
-**Request Body:**
-```json
+```http
+POST /api/v1/explain
+Content-Type: application/json
+
 {
-  "headphone_ids": [123, 456],
-  "user_profile_data": {
-    "bass_preference": 0.8,
-    "mids_preference": 0.6,
-    "treble_preference": 0.5
-  }
+  "session_id": "uuid",
+  "headphone_id": "uuid"
+}
+
+Response: 200 OK
+{
+  "headphone": {...},
+  "detailed_explanation": "...",
+  "comparison_points": [...]
 }
 ```
 
-### Get Headphone Details
-```
-GET /api/headphones/{headphone_id}
-```
+### Catalog
 
-### List Headphones
-```
-GET /api/headphones?min_price=100&max_price=500&use_case=casual&limit=50
-```
+```http
+GET /api/v1/headphones?type=over_ear&price_min=200&price_max=500&wireless=true
 
-## How It Works
-
-### 1. Feature Engineering (`app/models/audio_profile.py`)
-
-Extracts audio profile from Spotify features:
-
-**Spotify Feature → Audio Preference Mapping:**
-- **Bass**: High energy + danceability + low acousticness
-- **Mids**: Moderate energy + speechiness
-- **Treble**: High energy + low acousticness
-- **Soundstage**: Acousticness + instrumentalness
-- **Warmth**: High valence + low acousticness
-- **Imaging**: Instrumentalness
-
-### 2. Headphone Modeling (`app/models/headphone.py`)
-
-Derives normalized audio characteristics (0-1) from headphone specs:
-- Frequency response (bass/mids/treble)
-- Soundstage width & imaging quality
-- Warmth vs analytical signature
-- Comfort, isolation, durability
-
-### 3. Recommendation Algorithm (`app/services/recommendation_engine.py`)
-
-**Weighted Scoring (0-100):**
-- Sound Match: 40% - Weighted Euclidean distance in 5D audio space
-- Use Case: 20% - Primary usage alignment
-- Budget Fit: 15% - Prefers mid-range of budget
-- Features: 15% - ANC, wireless, type
-- Rating: 10% - Community validation
-
-**Hard Filters:**
-- Budget (allows 10% overage)
-- Required features (ANC, wireless)
-
-### 4. LLM Refinement (`app/services/llm_service.py`)
-
-Claude API enhances recommendations with:
-- Contextual re-ranking based on genre-specific needs
-- Technical explanations (frequency ranges, tuning philosophy)
-- Honest trade-off analysis
-- Alternative suggestions (upgrade, value, specialist picks)
-
-**Prompt Engineering:**
-- System: Audio engineer persona with psychoacoustics expertise
-- Context: User's music profile + algorithmic recommendations
-- Output: JSON with ranking, explanations, insights
-
-## Configuration
-
-### Scoring Weights
-
-Customize in `app/services/recommendation_engine.py`:
-
-```python
-@dataclass
-class ScoringWeights:
-    sound_match: float = 0.40
-    use_case_match: float = 0.20
-    budget_fit: float = 0.15
-    feature_match: float = 0.15
-    user_rating: float = 0.10
+Response: 200 OK
+{
+  "items": [...],
+  "total": 12,
+  "page": 1,
+  "page_size": 20
+}
 ```
 
-### LLM Model
+### Health
 
-Change in `app/services/llm_service.py`:
-
-```python
-self.model = "claude-3-5-sonnet-20241022"  # Latest model
+```http
+GET /health              # Overall health
+GET /health/ready        # Readiness probe
+GET /health/live         # Liveness probe
 ```
 
-## Testing
+## 🔒 Security Features
+
+- **CORS**: Configured for frontend origin (`localhost:3000` in dev)
+- **Rate Limiting**: Per-endpoint limits with IP tracking
+- **Input Validation**: Pydantic schemas with strict validation
+- **SQL Injection Protection**: SQLAlchemy ORM parameterization
+- **Environment Variables**: Sensitive credentials isolated
+- **LLM Call Protection**: Deduplication, timeout, retry, budget limits
+- **Error Masking**: Generic error messages to clients, detailed logs server-side
+
+## 🔧 Configuration
+
+See `.env.example` for all configuration options.
+
+**Required Variables**:
+- `DATABASE_URL` - PostgreSQL async connection string
+- `REDIS_URL` - Redis connection string
+- `SECRET_KEY` - Application secret key
+- `ANTHROPIC_API_KEY` or `OPENAI_API_KEY` - LLM API key
+
+**LLM Configuration**:
+- `LLM_PROVIDER` - `anthropic` or `openai` (default: anthropic)
+- `LLM_MODEL` - Model ID (default: claude-opus-4-5)
+- `LLM_MAX_TOKENS` - Max response tokens (default: 4000)
+- `LLM_TEMPERATURE` - Creativity (default: 0.7)
+
+**Performance Tuning**:
+- `CACHE_TTL_SESSION` - Session cache duration (default: 3600s)
+- `RATE_LIMIT_RECOMMEND` - Recommend endpoint limit (default: 10/min)
+- `CELERY_TASK_TIMEOUT` - Task timeout (default: 60s)
+
+## 🧪 Testing
 
 ```bash
-# Run tests
+# Install dev dependencies
+pip install -r requirements.txt
+
+# Run tests (when implemented)
 pytest
 
-# Run with coverage
-pytest --cov=app tests/
+# With coverage
+pytest --cov=app --cov-report=html
+
+# Specific test file
+pytest tests/test_api/test_recommendations.py -v
 ```
 
-## Frontend Integration
+## 🐳 Docker Commands
 
-### From Next.js Frontend
+```bash
+# Start all services
+docker-compose up -d
 
-```typescript
-const response = await fetch('http://localhost:8000/api/recommendations', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    genres: userPreferences.genres,
-    favorite_tracks: userPreferences.favoriteTracks,
-    sound_preferences: {
-      bass: userPreferences.bass,
-      mids: userPreferences.mids,
-      treble: userPreferences.treble,
-      soundstage: userPreferences.soundstage,
-      detail: userPreferences.detail,
-    },
-    primary_use_case: userPreferences.primaryUse,
-    budget_min: userPreferences.budgetMin,
-    budget_max: userPreferences.budgetMax,
-    anc_required: userPreferences.ancRequired,
-    wireless_required: userPreferences.wirelessRequired,
-    use_llm_refinement: true,
-  }),
-});
+# View logs
+docker-compose logs -f api
+docker-compose logs -f celery
 
-const data = await response.json();
+# Run migrations
+docker-compose exec api alembic upgrade head
+
+# Seed database
+docker-compose exec api python seeds/seed_db.py
+
+# Access database
+docker-compose exec postgres psql -U sonicmatch -d sonicmatch
+
+# Access Redis CLI
+docker-compose exec redis redis-cli
+
+# Stop services
+docker-compose down
+
+# Clean volumes (WARNING: deletes data)
+docker-compose down -v
+
+# Start with monitoring (includes Flower)
+docker-compose --profile monitoring up -d
+
+# Start with Nginx reverse proxy
+docker-compose --profile production up -d
 ```
 
-### Update CORS Origins
+## 📈 Monitoring
 
-In `app/main.py`, update allowed origins:
+### Flower (Celery Monitoring)
 
-```python
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:3001",
-        "https://your-production-domain.com"
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+```bash
+docker-compose --profile monitoring up -d
+# Access at http://localhost:5555
 ```
 
-## Performance Considerations
+### Logs
 
-- **LLM Caching**: `CachedLLMService` reduces API costs by caching explanations
-- **Data Loading**: CSV files loaded once on startup
-- **Async Operations**: FastAPI uses async for concurrent requests
-- **Token Limits**: LLM prompts kept under 2000 output tokens
+```bash
+# Application logs (JSON structured)
+docker-compose logs -f api
 
-## Cost Estimation
+# All services
+docker-compose logs -f
+```
 
-**Claude API Usage (per recommendation):**
-- Input: ~1500 tokens (user profile + top 5 headphones)
-- Output: ~500 tokens (JSON response)
-- Cost: ~$0.02 per recommendation (Claude 3.5 Sonnet)
+### Health Checks
 
-**Optimization:**
-- Use caching for repeated queries
-- Set `use_llm_refinement: false` for cost-sensitive scenarios
-- Algorithm-only mode still provides quality recommendations
+- `/health` - Overall system health
+- `/health/ready` - Database and Redis connectivity
+- `/health/live` - Application responsiveness
 
-## Troubleshooting
+## 🏛️ Architecture Decisions
 
-**LLM service not available:**
-- Check `ANTHROPIC_API_KEY` is set
-- Verify API key is valid
-- System continues with algorithm-only mode if LLM fails
+- **Async/Await**: Full async support using asyncio for high concurrency
+- **Pydantic V2**: Type-safe validation and settings management
+- **SQLAlchemy 2.0**: Modern async ORM with relationship loading strategies
+- **Structured Logging**: JSON logs with contextual fields for production monitoring
+- **LLM-First Approach**: Full AI-powered recommendations vs rule-based matching
+- **PostgreSQL JSON Fields**: Flexibility for evolving data structures
+- **Redis Caching**: Multi-layer caching strategy for performance
+- **Celery Background Jobs**: Async processing for long-running tasks
+- **Docker Compose**: Local development parity with production
 
-**Data files not found:**
-- Check paths in `app/main.py` lines 112, 122
-- Ensure CSV files exist and are readable
-- Check file encoding is UTF-8
+## 📚 Development Workflow
 
-**No recommendations returned:**
-- Relax budget constraints
-- Remove hard requirements (ANC, wireless)
-- Check headphones.csv has matching entries
+### Database Migrations
 
-## Architecture Decisions
+```bash
+# Create new migration
+alembic revision --autogenerate -m "Add new field to headphones"
 
-### Why Hybrid (Algorithm + LLM)?
+# Apply migrations
+alembic upgrade head
 
-1. **Consistency**: Rule-based algorithm provides deterministic baseline
-2. **Intelligence**: LLM adds contextual reasoning and explanations
-3. **Cost Control**: Algorithm runs first, LLM only refines top results
-4. **Fallback**: System works without LLM if API unavailable
+# Rollback last migration
+alembic downgrade -1
 
-### Why Euclidean Distance?
+# View migration history
+alembic history
+```
 
-Audio preferences form a continuous space where:
-- Similar sound signatures cluster together
-- Distance = dissimilarity
-- Weighted dimensions (bass 1.5x) reflect importance
+### Code Quality
 
-### Why Separate Feature Engineering?
+```bash
+# Format code
+black app/
 
-- **Transparency**: Clear mapping from Spotify → Audio profile
-- **Testability**: Each step can be validated independently
-- **Flexibility**: Easy to adjust weights or add new features
+# Sort imports
+isort app/
 
-## Future Enhancements
+# Lint
+ruff check app/
 
-- [ ] Add collaborative filtering (user-user similarity)
-- [ ] Implement A/B testing framework for scoring weights
-- [ ] Add caching layer (Redis) for popular queries
-- [ ] Support custom audio profiles (upload EQ settings)
-- [ ] Integrate with real Spotify API for live track analysis
-- [ ] Add batch recommendation endpoints
-- [ ] Implement rate limiting and API keys
+# Type checking
+mypy app/
+```
 
-## License
+### Adding New Headphones
 
-MIT License - See LICENSE file for details
+1. Edit `seeds/headphones.json`
+2. Run: `python seeds/seed_db.py --append` (to add new entries)
+
+## 🔗 Integration with Frontend
+
+The Next.js frontend (in `../sonicmatch-frontend/`) integrates via:
+
+1. **Environment Variable**:
+   ```bash
+   # In frontend .env.local
+   NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+   ```
+
+2. **API Calls**:
+   ```typescript
+   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recommend`, {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify(preferences)
+   });
+   ```
+
+3. **CORS**: Already configured for `localhost:3000` in backend
+
+## 📄 License
+
+Proprietary - SonicMatch 2026
+
+## 🤝 Contributing
+
+1. Follow existing project structure
+2. Use type hints throughout
+3. Add docstrings to public functions
+4. Validate with Pydantic schemas
+5. Write tests for new features
+6. Format with Black
+7. Update documentation
+
+## 🔗 Resources
+
+- **API Documentation**: `/docs` (Swagger UI)
+- **Alternative Docs**: `/redoc` (ReDoc)
+- **Implementation Plan**: `~/.claude/plans/eager-puzzling-locket.md`
+- **Frontend**: `../sonicmatch-frontend/`
+
+## 📞 Support
+
+For issues or questions:
+1. Check API docs at `/docs`
+2. Review logs: `docker-compose logs -f`
+3. Verify environment configuration
+4. Ensure all services are running: `docker-compose ps`
+
+---
+
+**Built with**: FastAPI • PostgreSQL • Redis • Celery • Claude AI • Docker

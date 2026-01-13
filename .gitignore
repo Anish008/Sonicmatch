@@ -70,3 +70,6 @@ celerybeat.pid
 # Misc
 .vercel
 .turbo
+
+# Old folders to delete
+sonicmatch-frontend/

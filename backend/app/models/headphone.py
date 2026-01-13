@@ -1,280 +1,163 @@
 """
-Headphone Model & Characteristics
-Maps headphone specs to audio characteristics
+Headphone model - Database catalog of all headphones.
 """
+import enum
+from decimal import Decimal
+from typing import List
 
-from dataclasses import dataclass
-from typing import List, Dict, Optional
-from enum import Enum
+from sqlalchemy import Enum, Index, Numeric, String, Text
+from sqlalchemy.dialects.postgresql import ARRAY, JSON
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-
-class HeadphoneType(Enum):
-    OVER_EAR = "Over-ear"
-    ON_EAR = "On-ear"
-    IN_EAR = "In-ear"
-    BONE_CONDUCTION = "Bone-conduction"
+from app.db.base import Base, TimestampMixin, UUIDMixin
 
 
-class UseCase(Enum):
-    STUDIO = "Studio"
-    GAMING = "Gaming"
-    CASUAL = "Casual"
-    WORKOUT = "Workout"
+class HeadphoneType(str, enum.Enum):
+    """Headphone form factor types."""
+    OVER_EAR = "over_ear"
+    ON_EAR = "on_ear"
+    IN_EAR = "in_ear"
+    EARBUDS = "earbuds"
 
 
-class SoundProfile(Enum):
-    BALANCED = "Balanced"
-    FLAT = "Flat"
-    BASS_HEAVY = "Bass-heavy"
+class BackType(str, enum.Enum):
+    """Headphone back design."""
+    OPEN = "open"
+    CLOSED = "closed"
+    SEMI_OPEN = "semi_open"
 
 
-@dataclass
-class HeadphoneCharacteristics:
+class PriceTier(str, enum.Enum):
+    """Price categorization."""
+    BUDGET = "budget"  # < $150
+    MID_RANGE = "mid_range"  # $150-$300
+    PREMIUM = "premium"  # $300-$500
+    FLAGSHIP = "flagship"  # > $500
+
+
+class Headphone(Base, UUIDMixin, TimestampMixin):
     """
-    Audio characteristics derived from headphone specs
-    Normalized 0-1 for comparison with AudioProfile
+    Headphone catalog model.
+
+    Stores all available headphones with their specifications,
+    pricing, and characteristics for matching against user preferences.
     """
-    # Frequency response (inferred from sound_profile + bass_level)
-    bass_response: float
-    mids_response: float
-    treble_response: float
 
-    # Soundstage & imaging (inferred from type + use_case)
-    soundstage_width: float
-    imaging_quality: float
+    __tablename__ = "headphones"
 
-    # Tonal characteristics
-    warmth: float  # Warm vs analytical
-    detail_retrieval: float  # Resolving power
+    # Basic Information
+    brand: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    model: Mapped[str] = mapped_column(String(200), nullable=False)
+    full_name: Mapped[str] = mapped_column(String(300), nullable=False)
+    slug: Mapped[str] = mapped_column(String(300), nullable=False, unique=True, index=True)
 
-    # Comfort & isolation
-    isolation: float  # Passive + ANC
-    comfort_score: float
+    # Physical Characteristics
+    headphone_type: Mapped[HeadphoneType] = mapped_column(
+        Enum(HeadphoneType, name="headphone_type_enum"),
+        nullable=False,
+        index=True,
+    )
+    back_type: Mapped[BackType] = mapped_column(
+        Enum(BackType, name="back_type_enum"),
+        nullable=False,
+    )
 
-    # Build quality indicators
-    durability_score: float
+    # Features
+    is_wireless: Mapped[bool] = mapped_column(default=False, nullable=False, index=True)
+    has_anc: Mapped[bool] = mapped_column(default=False, nullable=False, index=True)
 
+    # Pricing
+    price_usd: Mapped[Decimal] = mapped_column(
+        Numeric(10, 2),
+        nullable=False,
+        index=True,
+    )
+    price_tier: Mapped[PriceTier] = mapped_column(
+        Enum(PriceTier, name="price_tier_enum"),
+        nullable=False,
+        index=True,
+    )
 
-@dataclass
-class Headphone:
-    """Full headphone model with specs and derived characteristics"""
-    # From CSV
-    headphone_id: int
-    brand: str
-    model: str
-    price: float
-    type: HeadphoneType
-    use_case: UseCase
-    bass_level: str  # 'Low', 'Medium', 'High'
-    sound_profile: SoundProfile
-    noise_cancellation: bool
-    user_rating: float
-    user_reviews: int
+    # Media & Description
+    image_url: Mapped[str] = mapped_column(Text, nullable=False)
+    sound_signature: Mapped[str] = mapped_column(String(50), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
 
-    # Derived characteristics
-    characteristics: HeadphoneCharacteristics
+    # Structured Data (JSON)
+    key_features: Mapped[List[str]] = mapped_column(
+        JSON,
+        nullable=False,
+        default=list,
+    )
+    pros: Mapped[List[str]] = mapped_column(
+        JSON,
+        nullable=False,
+        default=list,
+    )
+    cons: Mapped[List[str]] = mapped_column(
+        JSON,
+        nullable=False,
+        default=list,
+    )
 
-    # Metadata
-    full_name: str
-    slug: str
-    description: str
+    # Detailed Specifications (JSON)
+    # Format: {"bass": 0.7, "mids": 0.6, "treble": 0.5, "soundstage": 0.8, "detail": 0.7}
+    detailed_specs: Mapped[dict] = mapped_column(
+        JSON,
+        nullable=False,
+        default=dict,
+    )
 
-    @staticmethod
-    def from_csv_row(row: Dict) -> 'Headphone':
-        """Create Headphone from CSV data"""
-        headphone_type = Headphone._parse_type(row['type'])
-        use_case = Headphone._parse_use_case(row['use_case'])
-        sound_profile = Headphone._parse_sound_profile(row['sound_profile'])
-        bass_level = row['bass_level']
+    # Target Audience (JSON Arrays)
+    target_genres: Mapped[List[str]] = mapped_column(
+        JSON,
+        nullable=False,
+        default=list,
+    )
+    target_use_cases: Mapped[List[str]] = mapped_column(
+        JSON,
+        nullable=False,
+        default=list,
+    )
 
-        # Derive characteristics
-        characteristics = Headphone._derive_characteristics(
-            headphone_type,
-            use_case,
-            sound_profile,
-            bass_level,
-            row['noise_cancellation'] == 'Yes',
-            float(row['price'])
-        )
+    # Relationships
+    # matches: Mapped[List["HeadphoneMatch"]] = relationship(
+    #     "HeadphoneMatch",
+    #     back_populates="headphone",
+    #     cascade="all, delete-orphan"
+    # )
 
-        return Headphone(
-            headphone_id=int(row['headphone_id']),
-            brand=row['brand'],
-            model=row['model'],
-            price=float(row['price']),
-            type=headphone_type,
-            use_case=use_case,
-            bass_level=bass_level,
-            sound_profile=sound_profile,
-            noise_cancellation=row['noise_cancellation'] == 'Yes',
-            user_rating=float(row['user_rating']),
-            user_reviews=int(row['user_reviews']),
-            characteristics=characteristics,
-            full_name=f"{row['brand']} {row['model']}",
-            slug=f"{row['brand']}-{row['model']}".lower().replace(' ', '-'),
-            description=Headphone._generate_description(row)
-        )
+    # Indexes for common queries
+    __table_args__ = (
+        Index("ix_headphones_price_tier_type", "price_tier", "headphone_type"),
+        Index("ix_headphones_wireless_anc", "is_wireless", "has_anc"),
+        Index("ix_headphones_price_range", "price_usd"),
+    )
 
-    @staticmethod
-    def _parse_type(type_str: str) -> HeadphoneType:
-        type_map = {
-            'over-ear': HeadphoneType.OVER_EAR,
-            'on-ear': HeadphoneType.ON_EAR,
-            'in-ear': HeadphoneType.IN_EAR,
-            'bone-conduction': HeadphoneType.BONE_CONDUCTION
-        }
-        return type_map.get(type_str.lower(), HeadphoneType.OVER_EAR)
+    def __repr__(self) -> str:
+        return f"<Headphone {self.full_name} (${self.price_usd})>"
 
-    @staticmethod
-    def _parse_use_case(use_case_str: str) -> UseCase:
-        use_case_map = {
-            'studio': UseCase.STUDIO,
-            'gaming': UseCase.GAMING,
-            'casual': UseCase.CASUAL,
-            'workout': UseCase.WORKOUT
-        }
-        return use_case_map.get(use_case_str.lower(), UseCase.CASUAL)
-
-    @staticmethod
-    def _parse_sound_profile(profile_str: str) -> SoundProfile:
-        profile_map = {
-            'balanced': SoundProfile.BALANCED,
-            'flat': SoundProfile.FLAT,
-            'bass-heavy': SoundProfile.BASS_HEAVY
-        }
-        return profile_map.get(profile_str.lower(), SoundProfile.BALANCED)
-
-    @staticmethod
-    def _derive_characteristics(
-        hp_type: HeadphoneType,
-        use_case: UseCase,
-        sound_profile: SoundProfile,
-        bass_level: str,
-        has_anc: bool,
-        price: float
-    ) -> HeadphoneCharacteristics:
-        """
-        Derive audio characteristics from headphone specs
-
-        This uses audio engineering knowledge to infer characteristics
-        """
-        # Base frequency response from sound profile
-        if sound_profile == SoundProfile.FLAT:
-            bass, mids, treble = 0.5, 0.5, 0.5
-            warmth = 0.3  # Analytical
-            detail = 0.9
-        elif sound_profile == SoundProfile.BALANCED:
-            bass, mids, treble = 0.6, 0.6, 0.6
-            warmth = 0.5
-            detail = 0.7
-        else:  # BASS_HEAVY
-            bass, mids, treble = 0.9, 0.4, 0.4
-            warmth = 0.7
-            detail = 0.5
-
-        # Adjust bass by bass_level
-        bass_multipliers = {'Low': 0.7, 'Medium': 1.0, 'High': 1.3}
-        bass *= bass_multipliers.get(bass_level, 1.0)
-        bass = min(bass, 1.0)
-
-        # Soundstage & imaging by type
-        if hp_type == HeadphoneType.OVER_EAR:
-            soundstage = 0.8
-            imaging = 0.8
-            comfort = 0.8
-        elif hp_type == HeadphoneType.ON_EAR:
-            soundstage = 0.6
-            imaging = 0.6
-            comfort = 0.6
-        elif hp_type == HeadphoneType.IN_EAR:
-            soundstage = 0.4
-            imaging = 0.5
-            comfort = 0.7
-        else:  # Bone conduction
-            soundstage = 0.3
-            imaging = 0.3
-            comfort = 0.9
-
-        # Studio headphones get imaging boost
-        if use_case == UseCase.STUDIO:
-            imaging += 0.2
-            detail += 0.1
-            soundstage += 0.1
-
-        # Gaming headphones get soundstage boost
-        if use_case == UseCase.GAMING:
-            soundstage += 0.15
-            bass += 0.1
-
-        # ANC adds isolation
-        isolation = 0.8 if has_anc else 0.5
-
-        # Price correlates with build quality and detail
-        price_factor = min(price / 1000, 1.0)  # Normalize to 0-1
-        durability = 0.5 + (price_factor * 0.5)
-        detail += price_factor * 0.1
-
-        # Clip all values
-        return HeadphoneCharacteristics(
-            bass_response=min(bass, 1.0),
-            mids_response=min(mids, 1.0),
-            treble_response=min(treble, 1.0),
-            soundstage_width=min(soundstage, 1.0),
-            imaging_quality=min(imaging, 1.0),
-            warmth=min(warmth, 1.0),
-            detail_retrieval=min(detail, 1.0),
-            isolation=isolation,
-            comfort_score=min(comfort, 1.0),
-            durability_score=durability
-        )
-
-    @staticmethod
-    def _generate_description(row: Dict) -> str:
-        """Generate marketing description"""
-        use_case_desc = {
-            'Studio': 'professional audio production and critical listening',
-            'Gaming': 'immersive gaming experiences with spatial awareness',
-            'Casual': 'everyday listening and commuting',
-            'Workout': 'active lifestyles and fitness activities'
-        }
-
-        desc = f"The {row['brand']} {row['model']} delivers {row['sound_profile'].lower()} sound "
-        desc += f"perfect for {use_case_desc.get(row['use_case'], 'audio enjoyment')}. "
-
-        if row['noise_cancellation'] == 'Yes':
-            desc += "Features active noise cancellation for immersive listening. "
-
-        desc += f"Rated {row['user_rating']}/5 by {int(row['user_reviews']):,} users."
-
-        return desc
-
-    def to_dict(self) -> Dict:
-        """Convert to dict for API responses"""
+    def to_dict(self) -> dict:
+        """Convert model to dictionary."""
         return {
-            'id': self.headphone_id,
-            'brand': self.brand,
-            'model': self.model,
-            'full_name': self.full_name,
-            'slug': self.slug,
-            'price': self.price,
-            'type': self.type.value,
-            'use_case': self.use_case.value,
-            'sound_profile': self.sound_profile.value,
-            'bass_level': self.bass_level,
-            'has_anc': self.noise_cancellation,
-            'rating': self.user_rating,
-            'reviews': self.user_reviews,
-            'description': self.description,
-            'characteristics': {
-                'bass': self.characteristics.bass_response,
-                'mids': self.characteristics.mids_response,
-                'treble': self.characteristics.treble_response,
-                'soundstage': self.characteristics.soundstage_width,
-                'imaging': self.characteristics.imaging_quality,
-                'warmth': self.characteristics.warmth,
-                'detail': self.characteristics.detail_retrieval,
-                'isolation': self.characteristics.isolation,
-                'comfort': self.characteristics.comfort_score,
-                'durability': self.characteristics.durability_score
-            }
+            "id": str(self.id),
+            "brand": self.brand,
+            "model": self.model,
+            "full_name": self.full_name,
+            "slug": self.slug,
+            "headphone_type": self.headphone_type.value,
+            "back_type": self.back_type.value,
+            "is_wireless": self.is_wireless,
+            "has_anc": self.has_anc,
+            "price_usd": float(self.price_usd),
+            "price_tier": self.price_tier.value,
+            "image_url": self.image_url,
+            "sound_signature": self.sound_signature,
+            "description": self.description,
+            "key_features": self.key_features,
+            "pros": self.pros,
+            "cons": self.cons,
+            "detailed_specs": self.detailed_specs,
+            "target_genres": self.target_genres,
+            "target_use_cases": self.target_use_cases,
         }
