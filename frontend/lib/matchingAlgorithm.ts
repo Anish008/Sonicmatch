@@ -159,22 +159,22 @@ function calculateMatchScores(
 ) {
   const headphoneProfile = getHeadphoneAudioProfile(headphone);
 
-  // Sound profile match (0-100)
-  const soundProfile = calculateAudioProfileSimilarity(userAudioProfile, headphoneProfile) * 100;
+  // Sound profile match (0-1)
+  const soundProfile = calculateAudioProfileSimilarity(userAudioProfile, headphoneProfile);
 
-  // Use case match (0-100)
-  const useCase = calculateUseCaseScore(headphone, preferences) * 100;
+  // Use case match (0-1)
+  const useCase = calculateUseCaseScore(headphone, preferences);
 
-  // Budget match (0-100) - how well it fits in their budget
-  const budget = calculateBudgetScore(headphone.price, preferences.budgetMin, preferences.budgetMax) * 100;
+  // Budget match (0-1) - how well it fits in their budget
+  const budget = calculateBudgetScore(headphone.price, preferences.budgetMin, preferences.budgetMax);
 
-  // Feature match (0-100)
-  const featureMatch = calculateFeatureScore(headphone, preferences) * 100;
+  // Feature match (0-1)
+  const featureMatch = calculateFeatureScore(headphone, preferences);
 
   // Genre match (already factored into sound profile, but keep for display)
   const genreMatch = soundProfile;
 
-  // Overall weighted score
+  // Overall weighted score (0-1)
   const overall = (
     soundProfile * 0.35 +
     useCase * 0.25 +

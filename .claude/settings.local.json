@@ -13,7 +13,7 @@
       "Bash(copy \"C:\\\\Project\\\\test\\\\data\\\\headphones.csv\" \"C:\\\\Project\\\\Sonicmatch\\\\sonicmatch-frontend\\\\sonicmatch-frontend\\\\data\\\\headphones.csv\")",
       "Bash(copy \"C:\\\\Project\\\\test\\\\data\\\\spotify_songs.csv\" \"C:\\\\Project\\\\Sonicmatch\\\\sonicmatch-frontend\\\\sonicmatch-frontend\\\\data\\\\spotify_songs.csv\")",
       "Bash(npm run type-check:*)",
-      "Bash(ls \"C:\\\\Project\\\\Sonicmatch\\\\sonicmatch-frontend\\\\sonicmatch-frontend\\\\public\\\\data\"\" 2>&1 || echo \"Directory does not exist \")",
+      "Bash(ls \"C:\\\\Project\\\\Sonicmatch\\\\sonicmatch-frontend\\\\sonicmatch-frontend\\\\public\\\\data\" 2>&1 || echo \"Directory does not exist\")",
       "Bash(ls:*)",
       "Bash(npm run lint)",
       "Bash(python -m py_compile:*)",
@@ -51,7 +51,12 @@
       "Bash(cmd //c \"rmdir /s /q sonicmatch-frontend\")",
       "Bash(handle \"sonicmatch-frontend\")",
       "Bash(powershell -Command \"Get-Process | Where-Object {$_Path -like ''*sonicmatch*''}\")",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "Bash(pkill:*)",
+      "Bash(taskkill /F /PID 7904)",
+      "Bash(taskkill //F //PID 7904)",
+      "Bash(npm install)",
+      "Bash(docker rm:*)"
     ]
   }
 }
