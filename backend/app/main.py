@@ -96,7 +96,7 @@ app.add_middleware(
 if not settings.debug:
     app.add_middleware(
         TrustedHostMiddleware,
-        allowed_hosts=["*.sonicmatch.com", "sonicmatch.com"]
+        allowed_hosts=["*.sonicmatch.com", "sonicmatch.com", "*.up.railway.app", "*.vercel.app"]
     )
 
 
