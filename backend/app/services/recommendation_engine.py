@@ -358,6 +358,59 @@ class RecommendationEngine:
             "preferred_type": preference.preferred_type,
         }
 
+    def _validate_score(self, score: float, score_name: str, headphone_id: uuid.UUID) -> Decimal:
+        """
+        Validate that a score is within valid range [0.0, 1.0].
+
+        Args:
+            score: Score value to validate
+            score_name: Name of the score (for error messages)
+            headphone_id: Headphone ID (for error logging)
+
+        Returns:
+            Validated score as Decimal
+
+        Raises:
+            ValidationException: If score is outside valid range or non-numeric
+        """
+        try:
+            score_float = float(score)
+        except (TypeError, ValueError) as e:
+            logger.error(
+                "invalid_score_type",
+                score_name=score_name,
+                score_value=score,
+                headphone_id=str(headphone_id),
+                error=str(e),
+            )
+            raise ValidationException(
+                f"Score '{score_name}' must be numeric, got: {type(score).__name__}",
+                detail={
+                    "score_name": score_name,
+                    "invalid_value": str(score),
+                    "headphone_id": str(headphone_id),
+                },
+            )
+
+        if not (0.0 <= score_float <= 1.0):
+            logger.error(
+                "score_out_of_range",
+                score_name=score_name,
+                score_value=score_float,
+                headphone_id=str(headphone_id),
+            )
+            raise ValidationException(
+                f"Score '{score_name}' must be between 0.0 and 1.0, got: {score_float}",
+                detail={
+                    "score_name": score_name,
+                    "invalid_value": score_float,
+                    "valid_range": [0.0, 1.0],
+                    "headphone_id": str(headphone_id),
+                },
+            )
+
+        return Decimal(str(score_float))
+
     async def _save_matches(
         self,
         session: RecommendationSession,
@@ -367,6 +420,8 @@ class RecommendationEngine:
         """
         Save LLM recommendations as HeadphoneMatch records.
 
+        Validates all scores are in [0.0, 1.0] range before saving.
+
         Args:
             session: Recommendation session
             llm_response: LLM response with recommendations
@@ -374,6 +429,9 @@ class RecommendationEngine:
 
         Returns:
             List of created matches
+
+        Raises:
+            ValidationException: If any score is invalid or out of range
         """
         matches = []
 
@@ -388,17 +446,37 @@ class RecommendationEngine:
                 )
                 continue
 
-            # Create match record
+            # Validate scores before creating match
+            scores = rec.get("scores", {})
+            try:
+                validated_scores = {
+                    "overall": self._validate_score(scores.get("overall"), "overall", headphone_id),
+                    "genre_match": self._validate_score(scores.get("genre_match"), "genre_match", headphone_id),
+                    "sound_profile": self._validate_score(scores.get("sound_profile"), "sound_profile", headphone_id),
+                    "use_case": self._validate_score(scores.get("use_case"), "use_case", headphone_id),
+                    "budget": self._validate_score(scores.get("budget"), "budget", headphone_id),
+                    "feature_match": self._validate_score(scores.get("feature_match"), "feature_match", headphone_id),
+                }
+            except ValidationException:
+                # Log already happened in _validate_score, skip this recommendation
+                logger.warning(
+                    "skipping_recommendation_invalid_scores",
+                    headphone_id=str(headphone_id),
+                    rank=rec.get("rank"),
+                )
+                continue
+
+            # Create match record with validated scores
             match = HeadphoneMatch(
                 session_id=session.id,
                 headphone_id=headphone_id,
                 rank=rec["rank"],
-                overall_score=Decimal(str(rec["scores"]["overall"])),
-                genre_match_score=Decimal(str(rec["scores"]["genre_match"])),
-                sound_profile_score=Decimal(str(rec["scores"]["sound_profile"])),
-                use_case_score=Decimal(str(rec["scores"]["use_case"])),
-                budget_score=Decimal(str(rec["scores"]["budget"])),
-                feature_match_score=Decimal(str(rec["scores"]["feature_match"])),
+                overall_score=validated_scores["overall"],
+                genre_match_score=validated_scores["genre_match"],
+                sound_profile_score=validated_scores["sound_profile"],
+                use_case_score=validated_scores["use_case"],
+                budget_score=validated_scores["budget"],
+                feature_match_score=validated_scores["feature_match"],
                 explanation=rec["explanation"],
                 personalized_pros=rec["personalized_pros"],
                 personalized_cons=rec["personalized_cons"],

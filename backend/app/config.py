@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     llm_provider: str = Field(default="anthropic", description="LLM provider (anthropic|openai)")
     anthropic_api_key: str | None = Field(default=None, description="Anthropic API key")
     openai_api_key: str | None = Field(default=None, description="OpenAI API key")
-    llm_model: str = Field(default="claude-opus-4-5", description="LLM model to use")
+    llm_model: str = Field(default="claude-sonnet-4-5-20250929", description="LLM model to use")
     llm_max_tokens: int = Field(default=4000, description="Max tokens for LLM responses")
     llm_temperature: float = Field(default=0.7, description="LLM temperature")
     llm_timeout: int = Field(default=30, description="LLM request timeout in seconds")

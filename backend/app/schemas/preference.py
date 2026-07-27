@@ -1,6 +1,7 @@
 """
 User Preference Pydantic schemas for API requests and responses.
 """
+import re
 from decimal import Decimal
 from uuid import UUID
 
@@ -72,14 +73,86 @@ class UserPreferenceBase(BaseModel):
                 raise ValueError("budget_max must be greater than or equal to budget_min")
         return v
 
+    @field_validator("genres")
+    @classmethod
+    def validate_genre_length(cls, v: list[str]) -> list[str]:
+        """Validate individual genre string lengths and sanitize."""
+        sanitized = []
+        for genre in v:
+            # Enforce max length
+            if len(genre) > 50:
+                raise ValueError("Genre must not exceed 50 characters")
+            # Basic sanitization: strip whitespace, disallow newlines
+            sanitized_genre = genre.strip().replace('\n', ' ').replace('\r', ' ')
+            if not sanitized_genre:
+                raise ValueError("Genre cannot be empty after sanitization")
+            sanitized.append(sanitized_genre)
+        return sanitized
+
     @field_validator("favorite_artists")
     @classmethod
     def validate_artist_length(cls, v: list[str]) -> list[str]:
-        """Validate individual artist string lengths."""
+        """Validate individual artist string lengths and sanitize."""
+        sanitized = []
         for artist in v:
+            # Enforce max length
             if len(artist) > 100:
                 raise ValueError("Artist name must not exceed 100 characters")
-        return v
+            # Basic sanitization: strip whitespace, disallow newlines
+            sanitized_artist = artist.strip().replace('\n', ' ').replace('\r', ' ')
+            if sanitized_artist:  # Only add non-empty artists
+                sanitized.append(sanitized_artist)
+        return sanitized
+
+    @field_validator("secondary_use_cases")
+    @classmethod
+    def validate_secondary_use_cases(cls, v: list[str]) -> list[str]:
+        """Validate individual use case string lengths and sanitize."""
+        sanitized = []
+        for use_case in v:
+            # Enforce max length
+            if len(use_case) > 50:
+                raise ValueError("Use case must not exceed 50 characters")
+            # Basic sanitization: strip whitespace, disallow newlines
+            sanitized_use_case = use_case.strip().replace('\n', ' ').replace('\r', ' ')
+            if sanitized_use_case:  # Only add non-empty use cases
+                sanitized.append(sanitized_use_case)
+        return sanitized
+
+    @field_validator("primary_use_case")
+    @classmethod
+    def sanitize_primary_use_case(cls, v: str) -> str:
+        """Sanitize primary use case (remove newlines, strip whitespace)."""
+        if not v:
+            return "casual"  # Default
+        return v.strip().replace('\n', ' ').replace('\r', ' ')
+
+    @field_validator("additional_notes")
+    @classmethod
+    def sanitize_additional_notes(cls, v: str) -> str:
+        """
+        Sanitize additional notes to prevent prompt injection.
+
+        Removes/replaces characters that could break out of the prompt context.
+        """
+        if not v:
+            return ""
+
+        # Strip leading/trailing whitespace
+        sanitized = v.strip()
+
+        # Replace newlines with spaces (prevent multi-line injection)
+        sanitized = sanitized.replace('\n', ' ').replace('\r', ' ')
+
+        # Collapse multiple spaces
+        import re
+        sanitized = re.sub(r'\s+', ' ', sanitized)
+
+        # Enforce max length (already validated by Field, but extra check)
+        if len(sanitized) > 1000:
+            sanitized = sanitized[:1000]
+
+        return sanitized
 
 
 class UserPreferenceCreate(UserPreferenceBase):

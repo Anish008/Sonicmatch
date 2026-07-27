@@ -398,8 +398,75 @@ Return as JSON:
 
         return prompt
 
+    def _validate_recommendation_scores(self, recommendations: list) -> None:
+        """
+        Validate that all scores in recommendations are within [0.0, 1.0].
+
+        Args:
+            recommendations: List of recommendation dictionaries
+
+        Raises:
+            LLMException: If any score is invalid
+        """
+        for i, rec in enumerate(recommendations):
+            scores = rec.get("scores", {})
+            headphone_id = rec.get("headphone_id", "unknown")
+
+            score_fields = ["overall", "genre_match", "sound_profile", "use_case", "budget", "feature_match"]
+
+            for field in score_fields:
+                score = scores.get(field)
+
+                # Check if score exists
+                if score is None:
+                    logger.error(
+                        "llm_response_missing_score",
+                        field=field,
+                        headphone_id=headphone_id,
+                        recommendation_index=i,
+                    )
+                    raise LLMException(
+                        f"Recommendation {i} missing required score field: {field}"
+                    )
+
+                # Check if score is numeric
+                try:
+                    score_float = float(score)
+                except (TypeError, ValueError):
+                    logger.error(
+                        "llm_response_non_numeric_score",
+                        field=field,
+                        score_value=score,
+                        score_type=type(score).__name__,
+                        headphone_id=headphone_id,
+                        recommendation_index=i,
+                    )
+                    raise LLMException(
+                        f"Score '{field}' must be numeric, got {type(score).__name__}: {score}"
+                    )
+
+                # Check if score is in valid range
+                if not (0.0 <= score_float <= 1.0):
+                    logger.error(
+                        "llm_response_score_out_of_range",
+                        field=field,
+                        score_value=score_float,
+                        headphone_id=headphone_id,
+                        recommendation_index=i,
+                    )
+                    raise LLMException(
+                        f"Score '{field}' must be between 0.0 and 1.0, got: {score_float}"
+                    )
+
     def _parse_recommendation_response(self, response: str) -> Dict[str, Any]:
-        """Parse and validate LLM recommendation response."""
+        """
+        Parse and validate LLM recommendation response.
+
+        Validates JSON structure and score ranges.
+
+        Raises:
+            LLMException: If response is invalid or scores are out of range
+        """
         try:
             # Remove markdown code blocks if present
             response = response.strip()
@@ -416,7 +483,11 @@ Return as JSON:
 
             # Validate structure
             if "recommendations" not in data:
-                raise ValueError("Missing 'recommendations' key")
+                logger.error("llm_response_missing_recommendations_key")
+                raise LLMException("Missing 'recommendations' key in LLM response")
+
+            # Validate scores in all recommendations
+            self._validate_recommendation_scores(data["recommendations"])
 
             return data
 
