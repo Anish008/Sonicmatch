@@ -322,13 +322,47 @@ Your task is to provide personalized, accurate headphone recommendations based o
 **Task:**
 Analyze the user's profile and rank the top {top_n} headphones from the candidates above. For each recommended headphone, provide:
 
-1. **Overall Match Score** (0.0-1.0): How well it matches overall
+1. **Overall Match Score** (0.0-1.0): Holistic match quality considering all factors
+   - 0.9-1.0: Exceptional match, hard to find better
+   - 0.8-0.9: Excellent match, highly recommended
+   - 0.7-0.8: Good match, solid choice
+   - 0.6-0.7: Decent match, acceptable
+   - <0.6: Weak match, has significant trade-offs
+
 2. **Individual Scores** (0.0-1.0 each):
-   - genre_match: How well it suits their music taste
-   - sound_profile: How well it matches their sound preferences
-   - use_case: How well it fits their primary use case
-   - budget: Value for money in their budget range
-   - feature_match: How well features align with needs
+   - **genre_match**: How well the headphone's tuning and target genres align with user's music taste
+     * Consider: Target genres overlap, sound signature suitability for genres
+     * Examples: Classical/jazz → wide soundstage + neutral; Hip-hop/EDM → strong sub-bass
+
+   - **sound_profile**: How well the headphone's frequency response matches user's sound preferences
+     * Consider: Bass/mids/treble levels, soundstage, detail retrieval
+     * Match user's bass/mids/treble/soundstage/detail values (0.0-1.0) to headphone specs
+     * Examples: User bass=0.9 → v-shaped headphones score high; bass=0.3 → neutral scores high
+
+   - **use_case**: How well the headphone fits the user's primary intended usage
+     * Studio → neutral tuning, good isolation, wired preferred
+     * Travel/Office → ANC required, wireless preferred, comfort priority
+     * Gaming → wide soundstage, good imaging, comfort for long sessions
+     * Audiophile → detail retrieval, accurate tuning, build quality
+     * Casual → forgiving tuning, comfort, good value
+
+   - **budget**: Value proposition within the user's budget range
+     * High score (0.8-1.0): Exceptional value at this price, best-in-class
+     * Mid score (0.6-0.8): Fair value, competitive with alternatives
+     * Low score (0.4-0.6): Overpriced or better alternatives exist
+     * Consider: Price positioning, competitors at same price, feature set value
+
+   - **feature_match**: How well physical features align with user's requirements
+     * Hard requirements: Wireless (if required), ANC (if required), open-back acceptance
+     * Soft preferences: Type (over-ear/on-ear/IEM), portability, build quality
+     * Penalize heavily for missing hard requirements, moderately for soft mismatches
+
+**Scoring Guidelines:**
+- The **overall** score should be a weighted combination of individual scores, NOT a simple average
+- Suggested weighting: genre_match (25%), sound_profile (30%), use_case (20%), budget (15%), feature_match (10%)
+- Hard requirements (wireless/ANC) in feature_match should heavily penalize overall if not met
+- Be honest and realistic - not every headphone deserves 0.9+
+- Differentiate between recommendations - top pick should clearly outscore #2, etc.
 
 3. **Explanation** (2-3 sentences): Why this headphone is recommended for this user
 4. **Personalized Pros** (2-3 points): Benefits specific to this user

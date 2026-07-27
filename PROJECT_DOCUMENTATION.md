@@ -1,7 +1,7 @@
 # SonicMatch - Complete Project Documentation
 
 **Version:** 1.0
-**Last Updated:** July 2026
+**Last Updated:** July 27, 2026
 **Project Type:** AI-Powered Headphone Recommendation Engine
 **Architecture:** Full-Stack Web Application (Next.js Frontend + FastAPI Backend)
 
@@ -23,6 +23,10 @@
 12. [File Structure](#file-structure)
 13. [Key Features Implemented](#key-features-implemented)
 14. [Development Workflow](#development-workflow)
+15. [Future Enhancements](#future-enhancements-phase-2)
+16. [Known Gaps & Testing Status](#known-gaps--testing-status)
+17. [Technical Decisions & Rationale](#technical-decisions--rationale)
+18. [Conclusion](#conclusion)
 
 ---
 
@@ -35,7 +39,7 @@ SonicMatch is an intelligent headphone recommendation platform that uses Large L
 - **AI-Powered Matching**: Uses LLM reasoning instead of simple rule-based filtering
 - **Multi-Dimensional Scoring**: 6-dimensional scoring system (overall, genre_match, sound_profile, use_case, budget, feature_match)
 - **Personalized Explanations**: Each recommendation includes AI-generated explanations, pros/cons, and match highlights
-- **Production-Ready**: Complete with caching, rate limiting, background jobs, monitoring, and deployment configuration
+- **Deployment-Ready Backend**: Complete with caching, rate limiting, background jobs, structured logging, and Docker deployment configuration (see Testing Status section for current gaps)
 - **Beautiful UX**: Premium dark aesthetic with smooth animations and engaging interactions
 
 ### Target Users
@@ -79,7 +83,7 @@ SonicMatch is an intelligent headphone recommendation platform that uses Large L
   "task_queue": "Celery 5.3.6",
   "monitoring": "Flower 2.0.1",
   "validation": "Pydantic 2.5.3",
-  "authentication": "Python-Jose (JWT) + Passlib (bcrypt)",
+  "authentication": "NOT IMPLEMENTED (scaffolded for Phase 2: Python-Jose + Passlib installed but unused)",
   "rate_limiting": "SlowAPI 0.1.9",
   "logging": "Structlog 24.1.0 (JSON structured)",
   "http_client": "HTTPX 0.26.0 (async)"
@@ -1011,10 +1015,29 @@ Production: https://api.sonicmatch.io
 Development: http://localhost:8000
 ```
 
-### Authentication (Phase 2)
+### Authentication (Phase 2 - Not Yet Implemented)
+
+**Current Status:** Authentication is scaffolded but **not implemented**.
+
+**What's Scaffolded:**
+- `User` model exists in `app/models/user.py` with email, hashed_password, is_active, is_verified fields
+- Relationship to `UserPreference` commented out (Phase 2)
+- Config settings exist: `SECRET_KEY`, `BCRYPT_ROUNDS`, `ACCESS_TOKEN_EXPIRE_MINUTES`, `ALGORITHM`
+- Dependencies installed: `python-jose[cryptography]` (JWT), `passlib[bcrypt]` (password hashing)
+
+**What's Missing:**
+- No `app/core/security.py` module (password hashing, JWT creation/verification)
+- No authentication routes (`/auth/register`, `/auth/login`, `/auth/me`)
+- No authentication dependency injection for protected routes
+- No database migration to create `users` table
+- User model relationship to UserPreference not activated
+
+**Planned for Phase 2:**
 ```
 Authorization: Bearer <JWT_TOKEN>
 ```
+
+**Current Behavior:** All API endpoints are **public** and do not require authentication. Session tracking uses anonymous session IDs.
 
 ### Endpoints
 
@@ -2108,8 +2131,8 @@ SonicMatch/
 │   │   ├── core/
 │   │   │   ├── __init__.py
 │   │   │   ├── cache.py                 # Redis wrapper
-│   │   │   ├── exceptions.py            # Custom exceptions
-│   │   │   └── security.py              # JWT, bcrypt
+│   │   │   └── exceptions.py            # Custom exceptions
+│   │   │   # security.py NOT IMPLEMENTED (Phase 2)
 │   │   │
 │   │   ├── db/
 │   │   │   ├── __init__.py
@@ -2152,15 +2175,19 @@ SonicMatch/
 │   │
 │   ├── migrations/
 │   │   ├── versions/
-│   │   │   ├── 001_initial_schema.py
-│   │   │   ├── 002_add_indexes.py
-│   │   │   └── 003_add_analytics.py
+│   │   │   └── 001_add_score_constraints.py  # Score validation constraints
 │   │   ├── env.py
 │   │   └── script.py.mako
 │   │
 │   ├── seeds/
 │   │   ├── headphones.json
 │   │   └── seed_db.py
+│   │
+│   ├── eval/                             # Evaluation framework
+│   │   ├── README.md                     # Setup & troubleshooting guide
+│   │   ├── eval_set.json                 # 15 hand-crafted test cases
+│   │   ├── run_eval.py                   # Evaluation runner script
+│   │   └── eval_results.json             # Generated results (after run)
 │   │
 │   ├── docker/
 │   │   ├── nginx.conf
@@ -2169,10 +2196,13 @@ SonicMatch/
 │   ├── tests/                           # Test suite (baseline coverage)
 │   │   ├── __init__.py
 │   │   ├── conftest.py                  # Pytest fixtures and config
+│   │   ├── README.md                    # Test documentation
 │   │   ├── test_api/                    # API endpoint tests (empty - future)
 │   │   ├── test_services/               # Service layer tests
-│   │   │   ├── test_llm_client.py       # LLM parsing & error handling (11 tests)
-│   │   │   └── test_recommendation_engine.py  # Candidate filtering (baseline)
+│   │   │   ├── test_llm_client.py       # LLM parsing & error handling (14 tests)
+│   │   │   └── test_recommendation_engine.py  # Candidate filtering (scaffolded)
+│   │   ├── test_schemas/                # Schema validation tests
+│   │   │   └── test_preference_sanitization.py  # Input sanitization (19 tests)
 │   │   └── test_models/                 # Model tests (empty - future)
 │   │
 │   ├── .env.example
@@ -2182,7 +2212,9 @@ SonicMatch/
 │   ├── alembic.ini
 │   ├── requirements.txt
 │   ├── pyproject.toml
-│   └── README.md
+│   ├── README.md
+│   ├── SCORE_VALIDATION.md           # 3-layer score validation guide
+│   └── PROMPT_INJECTION_SECURITY.md  # Attack surface analysis
 │
 └── frontend/
     ├── app/
@@ -2562,6 +2594,77 @@ python -m pytest tests/test_services/ -v
 # 11 passed in ~7s
 ```
 
+### Evaluation Framework
+
+**Location:** `backend/eval/`
+
+The evaluation framework tests the recommendation engine against hand-crafted user profiles to measure real-world performance.
+
+**Components:**
+- **`eval_set.json`**: 15 hand-crafted user preference profiles with expected headphone matches
+- **`run_eval.py`**: Evaluation script that runs test cases through RecommendationEngine
+- **`eval_results.json`**: Generated results file with pass/fail details (created after run)
+- **`README.md`**: Complete setup instructions and troubleshooting guide
+
+**Test Case Coverage:**
+The 15 test cases cover diverse scenarios:
+- Budget ranges: $50-100 (tight budget) to $500-800 (flagship)
+- Use cases: Audiophile, travel, studio, gaming, office, casual
+- Sound signatures: Neutral, v-shaped, warm
+- Special requirements: Wireless, ANC, open-back
+- Music genres: Classical, jazz, electronic, hip-hop, pop, metal, indie
+
+**Pass Criteria:**
+- Test passes if expected headphone (or acceptable alternative) appears in **top 3 recommendations**
+- **Target pass rate**: ≥70% (10/15 tests)
+
+**Running Evaluation:**
+```bash
+cd backend
+python eval/run_eval.py
+```
+
+**Prerequisites:**
+- PostgreSQL database running with seeded headphone data
+- Valid LLM API key configured in `.env`
+- Dependencies: `pip install asyncpg`
+
+**Current Status:**
+- ⚠️ Evaluation framework created but not yet run (requires database setup)
+- ⚠️ No baseline pass rate established yet
+- ⚠️ Not integrated into CI/CD pipeline
+
+**Expected Output:**
+```
+================================================================================
+SonicMatch Recommendation Engine Evaluation
+================================================================================
+Loaded 15 test cases from eval_set.json
+
+[budget_audiophile_01] Budget-conscious audiophile seeking neutral, open-back sound
+  Expected: philips-shp9500
+  Result: ✓ PASS
+  Top 3: philips-shp9500, sennheiser-hd-560s, akg-k371
+
+... (13 more test cases)
+
+================================================================================
+EVALUATION SUMMARY
+================================================================================
+Total test cases:  15
+Passed:            13 (86.7%)
+Failed:            2
+Errors:            0
+
+Detailed results saved to eval_results.json
+```
+
+**Future Improvements:**
+- Run initial evaluation to establish baseline pass rate
+- Expand test set with more edge cases (IEMs, on-ear, specific brands)
+- Add regression tracking to detect quality degradation
+- Integrate into CI/CD to run on every PR
+
 ### Critical Gaps Identified and Fixed
 
 1. ✅ **Score Range Validation (FIXED)**
@@ -2671,14 +2774,25 @@ python -m pytest tests/test_services/ -v
 
 ## Conclusion
 
-SonicMatch is a production-ready AI-powered headphone recommendation platform with:
+SonicMatch is a **deployment-ready** AI-powered headphone recommendation platform with strong fundamentals and some remaining gaps before full production use:
+
+**Current Strengths:**
 - Robust backend architecture (FastAPI + PostgreSQL + Redis)
 - Beautiful frontend (Next.js + Tailwind + Framer Motion)
 - Intelligent LLM-based matching (Claude/OpenAI)
 - Comprehensive caching and performance optimizations
-- Security and rate limiting
-- Docker deployment ready
+- Rate limiting and CORS security
+- Docker deployment configuration
 - 28 curated headphones across all price tiers
+- 33 passing unit tests (LLM client, input sanitization)
+- 3-layer score validation (LLM, app, database)
+- Prompt injection mitigation
+
+**Known Gaps** (see Testing Status section):
+- No API endpoint or integration tests
+- Authentication scaffolded but not implemented
+- Evaluation framework created but baseline not established
+- No production monitoring/alerting beyond structured logs
 
 The project demonstrates best practices in:
 - Full-stack web development

@@ -1,0 +1,484 @@
+[
+  {
+    "test_id": "budget_audiophile_01",
+    "description": "Budget-conscious audiophile seeking neutral, open-back sound",
+    "user_preference": {
+      "genres": ["classical", "jazz", "acoustic"],
+      "favorite_artists": ["Miles Davis", "John Coltrane"],
+      "favorite_tracks": [],
+      "hours_per_day": 4,
+      "primary_source": "streaming",
+      "listening_environment": "home",
+      "sound_preferences": {
+        "bass": 0.4,
+        "mids": 0.8,
+        "treble": 0.7,
+        "soundstage": 0.9,
+        "detail": 0.9
+      },
+      "primary_use_case": "audiophile",
+      "secondary_use_cases": ["casual"],
+      "budget_min": 50,
+      "budget_max": 150,
+      "preferred_type": "over_ear",
+      "open_back_acceptable": true,
+      "wireless_required": false,
+      "anc_required": false,
+      "additional_notes": ""
+    },
+    "expected_top_match": {
+      "slug": "philips-shp9500",
+      "reason": "Budget open-back with neutral signature, wide soundstage, perfect for classical/jazz"
+    }
+  },
+  {
+    "test_id": "travel_anc_premium_02",
+    "description": "Frequent traveler needing premium ANC and wireless",
+    "user_preference": {
+      "genres": ["pop", "electronic", "rnb"],
+      "favorite_artists": ["Daft Punk", "The Weeknd"],
+      "favorite_tracks": [],
+      "hours_per_day": 6,
+      "primary_source": "streaming",
+      "listening_environment": "mixed",
+      "sound_preferences": {
+        "bass": 0.8,
+        "mids": 0.6,
+        "treble": 0.6,
+        "soundstage": 0.5,
+        "detail": 0.7
+      },
+      "primary_use_case": "travel",
+      "secondary_use_cases": ["office", "casual"],
+      "budget_min": 300,
+      "budget_max": 450,
+      "preferred_type": "over_ear",
+      "open_back_acceptable": false,
+      "wireless_required": true,
+      "anc_required": true,
+      "additional_notes": ""
+    },
+    "expected_top_match": {
+      "slug": "sony-wh-1000xm5",
+      "reason": "Best-in-class ANC, warm bass-heavy signature, perfect for travel"
+    }
+  },
+  {
+    "test_id": "studio_professional_03",
+    "description": "Audio professional needing accurate monitoring headphones",
+    "user_preference": {
+      "genres": ["pop", "electronic", "hip_hop", "rock"],
+      "favorite_artists": [],
+      "favorite_tracks": [],
+      "hours_per_day": 8,
+      "primary_source": "daw",
+      "listening_environment": "studio",
+      "sound_preferences": {
+        "bass": 0.6,
+        "mids": 0.8,
+        "treble": 0.7,
+        "soundstage": 0.5,
+        "detail": 0.9
+      },
+      "primary_use_case": "studio",
+      "secondary_use_cases": [],
+      "budget_min": 100,
+      "budget_max": 200,
+      "preferred_type": "over_ear",
+      "open_back_acceptable": false,
+      "wireless_required": false,
+      "anc_required": false,
+      "additional_notes": ""
+    },
+    "expected_top_match": {
+      "slug": "audio-technica-ath-m50x",
+      "reason": "Industry standard studio monitors with excellent detail and isolation"
+    },
+    "acceptable_alternatives": ["akg-k371"]
+  },
+  {
+    "test_id": "gamer_music_hybrid_04",
+    "description": "Gamer who also enjoys bass-heavy music",
+    "user_preference": {
+      "genres": ["electronic", "hip_hop", "metal"],
+      "favorite_artists": [],
+      "favorite_tracks": [],
+      "hours_per_day": 5,
+      "primary_source": "streaming",
+      "listening_environment": "home",
+      "sound_preferences": {
+        "bass": 0.9,
+        "mids": 0.5,
+        "treble": 0.7,
+        "soundstage": 0.6,
+        "detail": 0.6
+      },
+      "primary_use_case": "gaming",
+      "secondary_use_cases": ["casual"],
+      "budget_min": 75,
+      "budget_max": 150,
+      "preferred_type": "over_ear",
+      "open_back_acceptable": false,
+      "wireless_required": false,
+      "anc_required": false,
+      "additional_notes": ""
+    },
+    "expected_top_match": {
+      "slug": "hyperx-cloud-ii",
+      "reason": "Great for gaming and music, v-shaped with strong bass"
+    }
+  },
+  {
+    "test_id": "classical_reference_05",
+    "description": "Classical music enthusiast seeking reference-grade accuracy",
+    "user_preference": {
+      "genres": ["classical", "acoustic", "jazz"],
+      "favorite_artists": ["Johann Sebastian Bach", "Ludwig van Beethoven"],
+      "favorite_tracks": [],
+      "hours_per_day": 3,
+      "primary_source": "streaming",
+      "listening_environment": "home",
+      "sound_preferences": {
+        "bass": 0.5,
+        "mids": 0.8,
+        "treble": 0.7,
+        "soundstage": 0.9,
+        "detail": 0.9
+      },
+      "primary_use_case": "audiophile",
+      "secondary_use_cases": ["casual"],
+      "budget_min": 150,
+      "budget_max": 250,
+      "preferred_type": "over_ear",
+      "open_back_acceptable": true,
+      "wireless_required": false,
+      "anc_required": false,
+      "additional_notes": ""
+    },
+    "expected_top_match": {
+      "slug": "sennheiser-hd-560s",
+      "reason": "Reference-grade open-back with exceptional detail for classical"
+    }
+  },
+  {
+    "test_id": "wireless_audiophile_06",
+    "description": "Audiophile willing to pay premium for wireless convenience",
+    "user_preference": {
+      "genres": ["classical", "jazz", "acoustic", "indie"],
+      "favorite_artists": ["Norah Jones"],
+      "favorite_tracks": [],
+      "hours_per_day": 4,
+      "primary_source": "streaming",
+      "listening_environment": "mixed",
+      "sound_preferences": {
+        "bass": 0.6,
+        "mids": 0.8,
+        "treble": 0.7,
+        "soundstage": 0.7,
+        "detail": 0.9
+      },
+      "primary_use_case": "audiophile",
+      "secondary_use_cases": ["travel", "office"],
+      "budget_min": 300,
+      "budget_max": 450,
+      "preferred_type": "over_ear",
+      "open_back_acceptable": false,
+      "wireless_required": true,
+      "anc_required": true,
+      "additional_notes": ""
+    },
+    "expected_top_match": {
+      "slug": "sennheiser-momentum-4",
+      "reason": "Audiophile wireless with neutral signature, excellent detail, 60hr battery"
+    }
+  },
+  {
+    "test_id": "apple_ecosystem_07",
+    "description": "Apple user prioritizing ecosystem integration",
+    "user_preference": {
+      "genres": ["pop", "acoustic", "indie"],
+      "favorite_artists": [],
+      "favorite_tracks": [],
+      "hours_per_day": 3,
+      "primary_source": "streaming",
+      "listening_environment": "mixed",
+      "sound_preferences": {
+        "bass": 0.6,
+        "mids": 0.7,
+        "treble": 0.7,
+        "soundstage": 0.8,
+        "detail": 0.8
+      },
+      "primary_use_case": "casual",
+      "secondary_use_cases": ["travel"],
+      "budget_min": 400,
+      "budget_max": 600,
+      "preferred_type": "over_ear",
+      "open_back_acceptable": false,
+      "wireless_required": true,
+      "anc_required": true,
+      "additional_notes": ""
+    },
+    "expected_top_match": {
+      "slug": "apple-airpods-max",
+      "reason": "Premium Apple integration, Spatial Audio, excellent ANC"
+    }
+  },
+  {
+    "test_id": "flagship_audiophile_08",
+    "description": "No-compromise audiophile seeking absolute best",
+    "user_preference": {
+      "genres": ["classical", "jazz", "acoustic"],
+      "favorite_artists": [],
+      "favorite_tracks": [],
+      "hours_per_day": 5,
+      "primary_source": "flac",
+      "listening_environment": "home",
+      "sound_preferences": {
+        "bass": 0.6,
+        "mids": 0.9,
+        "treble": 0.8,
+        "soundstage": 0.7,
+        "detail": 0.95
+      },
+      "primary_use_case": "audiophile",
+      "secondary_use_cases": ["casual"],
+      "budget_min": 500,
+      "budget_max": 800,
+      "preferred_type": "over_ear",
+      "open_back_acceptable": false,
+      "wireless_required": true,
+      "anc_required": false,
+      "additional_notes": ""
+    },
+    "expected_top_match": {
+      "slug": "focal-bathys",
+      "reason": "Flagship audiophile wireless with USB DAC mode, best-in-class sound"
+    }
+  },
+  {
+    "test_id": "office_comfort_09",
+    "description": "Office worker prioritizing all-day comfort and ANC",
+    "user_preference": {
+      "genres": ["pop", "rnb", "hip_hop"],
+      "favorite_artists": [],
+      "favorite_tracks": [],
+      "hours_per_day": 8,
+      "primary_source": "streaming",
+      "listening_environment": "office",
+      "sound_preferences": {
+        "bass": 0.7,
+        "mids": 0.6,
+        "treble": 0.5,
+        "soundstage": 0.4,
+        "detail": 0.6
+      },
+      "primary_use_case": "office",
+      "secondary_use_cases": ["travel", "casual"],
+      "budget_min": 250,
+      "budget_max": 400,
+      "preferred_type": "over_ear",
+      "open_back_acceptable": false,
+      "wireless_required": true,
+      "anc_required": true,
+      "additional_notes": ""
+    },
+    "expected_top_match": {
+      "slug": "bose-qc45",
+      "reason": "Most comfortable, excellent ANC, perfect for all-day office wear"
+    }
+  },
+  {
+    "test_id": "v_shaped_enthusiast_10",
+    "description": "Electronic/metal fan loving emphasized bass and treble",
+    "user_preference": {
+      "genres": ["electronic", "metal", "hip_hop"],
+      "favorite_artists": [],
+      "favorite_tracks": [],
+      "hours_per_day": 4,
+      "primary_source": "streaming",
+      "listening_environment": "home",
+      "sound_preferences": {
+        "bass": 0.9,
+        "mids": 0.4,
+        "treble": 0.9,
+        "soundstage": 0.6,
+        "detail": 0.8
+      },
+      "primary_use_case": "casual",
+      "secondary_use_cases": ["studio"],
+      "budget_min": 120,
+      "budget_max": 200,
+      "preferred_type": "over_ear",
+      "open_back_acceptable": false,
+      "wireless_required": false,
+      "anc_required": false,
+      "additional_notes": ""
+    },
+    "expected_top_match": {
+      "slug": "beyerdynamic-dt-770-pro",
+      "reason": "V-shaped signature with emphasized bass/treble, great for electronic/metal"
+    },
+    "acceptable_alternatives": ["audio-technica-ath-m50x"]
+  },
+  {
+    "test_id": "neutral_accuracy_11",
+    "description": "Listener seeking Harman-curve accuracy on budget",
+    "user_preference": {
+      "genres": ["pop", "jazz", "rnb"],
+      "favorite_artists": [],
+      "favorite_tracks": [],
+      "hours_per_day": 3,
+      "primary_source": "streaming",
+      "listening_environment": "mixed",
+      "sound_preferences": {
+        "bass": 0.6,
+        "mids": 0.8,
+        "treble": 0.7,
+        "soundstage": 0.5,
+        "detail": 0.8
+      },
+      "primary_use_case": "casual",
+      "secondary_use_cases": ["studio"],
+      "budget_min": 100,
+      "budget_max": 200,
+      "preferred_type": "over_ear",
+      "open_back_acceptable": false,
+      "wireless_required": false,
+      "anc_required": false,
+      "additional_notes": ""
+    },
+    "expected_top_match": {
+      "slug": "akg-k371",
+      "reason": "Perfect Harman curve tuning, accurate and neutral"
+    }
+  },
+  {
+    "test_id": "tight_budget_12",
+    "description": "Student on very tight budget seeking best value",
+    "user_preference": {
+      "genres": ["pop", "indie", "acoustic"],
+      "favorite_artists": [],
+      "favorite_tracks": [],
+      "hours_per_day": 3,
+      "primary_source": "streaming",
+      "listening_environment": "home",
+      "sound_preferences": {
+        "bass": 0.5,
+        "mids": 0.7,
+        "treble": 0.7,
+        "soundstage": 0.7,
+        "detail": 0.7
+      },
+      "primary_use_case": "casual",
+      "secondary_use_cases": [],
+      "budget_min": 50,
+      "budget_max": 100,
+      "preferred_type": "over_ear",
+      "open_back_acceptable": true,
+      "wireless_required": false,
+      "anc_required": false,
+      "additional_notes": ""
+    },
+    "expected_top_match": {
+      "slug": "philips-shp9500",
+      "reason": "Best value under $100, comfortable, neutral sound"
+    }
+  },
+  {
+    "test_id": "bass_head_wireless_13",
+    "description": "Bass enthusiast wanting wireless convenience",
+    "user_preference": {
+      "genres": ["hip_hop", "electronic", "rnb"],
+      "favorite_artists": ["Kendrick Lamar", "Travis Scott"],
+      "favorite_tracks": [],
+      "hours_per_day": 4,
+      "primary_source": "streaming",
+      "listening_environment": "mixed",
+      "sound_preferences": {
+        "bass": 0.9,
+        "mids": 0.5,
+        "treble": 0.6,
+        "soundstage": 0.4,
+        "detail": 0.6
+      },
+      "primary_use_case": "casual",
+      "secondary_use_cases": ["travel"],
+      "budget_min": 300,
+      "budget_max": 450,
+      "preferred_type": "over_ear",
+      "open_back_acceptable": false,
+      "wireless_required": true,
+      "anc_required": true,
+      "additional_notes": ""
+    },
+    "expected_top_match": {
+      "slug": "sony-wh-1000xm5",
+      "reason": "Bass-heavy tuning, excellent wireless, great for hip-hop/electronic"
+    }
+  },
+  {
+    "test_id": "studio_isolation_14",
+    "description": "Producer needing excellent isolation and v-shaped sound",
+    "user_preference": {
+      "genres": ["electronic", "hip_hop", "rock"],
+      "favorite_artists": [],
+      "favorite_tracks": [],
+      "hours_per_day": 6,
+      "primary_source": "daw",
+      "listening_environment": "studio",
+      "sound_preferences": {
+        "bass": 0.7,
+        "mids": 0.5,
+        "treble": 0.8,
+        "soundstage": 0.6,
+        "detail": 0.8
+      },
+      "primary_use_case": "studio",
+      "secondary_use_cases": ["casual"],
+      "budget_min": 120,
+      "budget_max": 200,
+      "preferred_type": "over_ear",
+      "open_back_acceptable": false,
+      "wireless_required": false,
+      "anc_required": false,
+      "additional_notes": ""
+    },
+    "expected_top_match": {
+      "slug": "beyerdynamic-dt-770-pro",
+      "reason": "Excellent isolation, v-shaped signature, studio classic"
+    }
+  },
+  {
+    "test_id": "indie_soundstage_15",
+    "description": "Indie/acoustic lover prioritizing soundstage and detail",
+    "user_preference": {
+      "genres": ["indie", "acoustic", "folk"],
+      "favorite_artists": ["Bon Iver", "Fleet Foxes"],
+      "favorite_tracks": [],
+      "hours_per_day": 3,
+      "primary_source": "streaming",
+      "listening_environment": "home",
+      "sound_preferences": {
+        "bass": 0.4,
+        "mids": 0.8,
+        "treble": 0.7,
+        "soundstage": 0.9,
+        "detail": 0.8
+      },
+      "primary_use_case": "casual",
+      "secondary_use_cases": ["audiophile"],
+      "budget_min": 150,
+      "budget_max": 250,
+      "preferred_type": "over_ear",
+      "open_back_acceptable": true,
+      "wireless_required": false,
+      "anc_required": false,
+      "additional_notes": ""
+    },
+    "expected_top_match": {
+      "slug": "sennheiser-hd-560s",
+      "reason": "Exceptional soundstage and detail, perfect for indie/acoustic"
+    }
+  }
+]
