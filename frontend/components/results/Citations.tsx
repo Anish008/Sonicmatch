@@ -59,7 +59,7 @@ export function Citations({ citations }: CitationsProps) {
                   {/* Citation content */}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-white/70 leading-relaxed mb-2">
-                      "{citation.claim}"
+                      &ldquo;{citation.claim}&rdquo;
                     </p>
 
                     <div className="flex items-center gap-2 text-xs text-white/40">
