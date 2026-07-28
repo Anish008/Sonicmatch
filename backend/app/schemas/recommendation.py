@@ -11,6 +11,16 @@ from app.schemas.preference import UserPreferenceCreate
 from app.schemas.headphone import HeadphoneResponse
 
 
+class Citation(BaseModel):
+    """Citation linking a claim to a source."""
+
+    claim: str = Field(..., description="The claim being cited")
+    source_url: str = Field(alias="sourceUrl", description="URL of the source")
+    source_type: str = Field(alias="sourceType", description="Type of source (review, expert_review, etc.)")
+
+    model_config = ConfigDict(populate_by_name=True)
+
+
 class MatchScores(BaseModel):
     """Individual match scores."""
 
@@ -41,6 +51,10 @@ class HeadphoneMatchBase(BaseModel):
     match_highlights: list[str] = Field(
         alias="matchHighlights",
         default_factory=list
+    )
+    citations: list[Citation] = Field(
+        default_factory=list,
+        description="Citations supporting claims in explanation/pros/cons"
     )
 
     model_config = ConfigDict(populate_by_name=True)
@@ -128,6 +142,10 @@ class ExplainResponse(BaseModel):
     comparison_points: list[str] = Field(
         alias="comparisonPoints",
         default_factory=list
+    )
+    citations: list[Citation] = Field(
+        default_factory=list,
+        description="Citations supporting claims in the explanation"
     )
 
     model_config = ConfigDict(populate_by_name=True)

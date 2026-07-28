@@ -6,6 +6,7 @@ from app.models.analytics import AnalyticsEvent
 from app.models.headphone import Headphone, HeadphoneType, BackType, PriceTier
 from app.models.preference import UserPreference, UseCase
 from app.models.recommendation import RecommendationSession, HeadphoneMatch, SessionStatus
+from app.models.review_chunk import ReviewChunk, SourceType
 from app.models.user import User
 
 __all__ = [
@@ -21,6 +22,9 @@ __all__ = [
     "RecommendationSession",
     "HeadphoneMatch",
     "SessionStatus",
+    # Review Chunks (RAG)
+    "ReviewChunk",
+    "SourceType",
     # User
     "User",
     # Analytics

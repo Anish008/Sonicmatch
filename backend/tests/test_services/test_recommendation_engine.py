@@ -287,11 +287,10 @@ class TestScoreValidation:
     @pytest.mark.asyncio
     async def test_save_scores_out_of_range(self, db_session, sample_user_preference, sample_headphone):
         """
-        Test saving matches with scores outside [0, 1] range.
+        Test that matches with scores outside [0, 1] range are skipped.
 
-        WARNING: Current implementation does NOT validate score ranges!
-        This test documents the gap - scores outside [0, 1] are currently accepted.
-        This SHOULD raise an error but doesn't.
+        The implementation now validates score ranges and skips recommendations
+        with invalid scores instead of saving them.
         """
         from app.models import RecommendationSession
 
@@ -329,18 +328,15 @@ class TestScoreValidation:
         # Save matches
         engine = RecommendationEngine(db_session)
 
-        # Currently, this DOES NOT raise an error (it should!)
+        # Should skip recommendations with invalid scores
         matches = await engine._save_matches(
             session=session,
             llm_response=llm_response,
             candidates={sample_headphone.id: sample_headphone},
         )
 
-        # The invalid scores are saved as-is
-        assert matches[0].overall_score == Decimal("1.5")
-        assert matches[0].genre_match_score == Decimal("-0.1")
-
-        # TODO: Add validation to reject scores outside [0, 1]
+        # Should return no matches because scores are invalid
+        assert len(matches) == 0
 
 
 class TestRecommendationGeneration:

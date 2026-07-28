@@ -1,0 +1,398 @@
+[
+  {
+    "headphone_slug": "sennheiser-hd-560s",
+    "source_type": "expert_review",
+    "source_url": "https://www.rtings.com/headphones/reviews/sennheiser/hd-560s",
+    "chunk_text": "The HD 560S delivers exceptional clarity in the midrange with a neutral, reference-grade sound signature. Vocals are incredibly detailed and natural-sounding. The treble is well-extended without being harsh, making these great for long classical music listening sessions. However, the bass is light and won't satisfy bass-heads looking for deep sub-bass rumble in electronic music."
+  },
+  {
+    "headphone_slug": "sennheiser-hd-560s",
+    "source_type": "forum_post",
+    "source_url": "https://www.reddit.com/r/headphones/comments/abc123/hd560s_impressions",
+    "chunk_text": "Been using the HD 560S for orchestral music and jazz for about 3 months now. The soundstage is impressively wide for a closed-to-mid-tier headphone - you can really pinpoint instrument placement in complex pieces. They're super comfortable too, I wear them 4-5 hours straight with glasses and no issues. Only complaint is they leak sound like crazy, so don't use these in a quiet office."
+  },
+  {
+    "headphone_slug": "sennheiser-hd-560s",
+    "source_type": "review",
+    "source_url": "https://www.head-fi.org/showcase/sennheiser-hd-560s.25091/reviews",
+    "chunk_text": "At $199, the HD 560S is an absolute steal for critical listening. The imaging is precise enough for audio production work, and the frequency response is impressively flat. I A/B tested these against my HD 650s and while the 650s are warmer and more forgiving, the 560S reveals more detail in acoustic recordings. They do require a decent amp though - the 120 ohm impedance means they sound thin straight from a phone."
+  },
+  {
+    "headphone_slug": "sennheiser-hd-560s",
+    "source_type": "expert_review",
+    "source_url": "https://crinacle.com/2021/sennheiser-hd-560s-review/",
+    "chunk_text": "Frequency response measurements show excellent linearity from 200Hz to 4kHz with minimal deviation from the Harman target. The bass shelf rolls off naturally around 80Hz, which will sound lean to those accustomed to consumer tuning. Treble peaks slightly at 6kHz but remains well-controlled. These measure better than headphones twice their price in terms of tonal accuracy."
+  },
+  {
+    "headphone_slug": "sennheiser-hd-560s",
+    "source_type": "review",
+    "source_url": "https://www.amazon.com/reviews/HD560S",
+    "chunk_text": "Perfect for mixing and mastering. I use these daily in my home studio for checking mixes before sending to clients. They reveal harsh sibilance and muddiness that I miss on my monitors. The velour pads stay cool even during 8-hour sessions. Build quality is plasticky but feels durable enough. Cable is non-detachable which is my only gripe - would love a balanced cable option."
+  },
+  {
+    "headphone_slug": "sennheiser-hd-560s",
+    "source_type": "forum_post",
+    "source_url": "https://www.head-fi.org/threads/hd560s-vs-hd6xx.950123/",
+    "chunk_text": "Coming from the HD 6XX, the 560S sounds brighter and more analytical. The 6XX has that warm Sennheiser veil which makes everything sound pleasant but less detailed. For classical and acoustic, I prefer the 560S. For rock and vocals, the 6XX is more engaging. The 560S also has better treble extension - cymbals have more shimmer and air."
+  },
+  {
+    "headphone_slug": "sony-wh-1000xm5",
+    "source_type": "expert_review",
+    "source_url": "https://www.rtings.com/headphones/reviews/sony/wh-1000xm5",
+    "chunk_text": "The XM5's active noise cancellation is industry-leading, especially for low-frequency rumble like airplane engines and air conditioning. In our tests, it reduced ambient noise by 38dB at 100Hz, outperforming the Bose 700 and AirPods Max. The redesigned drivers provide a warmer sound with elevated bass that works well for pop and hip-hop but may sound muddy for classical listeners seeking neutrality."
+  },
+  {
+    "headphone_slug": "sony-wh-1000xm5",
+    "source_type": "review",
+    "source_url": "https://www.theverge.com/sony-xm5-review",
+    "chunk_text": "After 50+ flights with the XM5, I can confidently say these are the best travel headphones available. The 30-hour battery life means I never worry about charging on long trips. LDAC over Bluetooth sounds surprisingly good with hi-res files. My only complaint is they no longer fold, making them bulkier in a carry-on than the XM4. Also, the touch controls occasionally register false inputs when adjusting fit."
+  },
+  {
+    "headphone_slug": "sony-wh-1000xm5",
+    "source_type": "forum_post",
+    "source_url": "https://www.reddit.com/r/headphones/comments/xm5_travel/",
+    "chunk_text": "Used these on a 14-hour flight to Tokyo last week. The ANC blocked out crying babies and engine noise almost completely - way better than my old QC35s. Sound is definitely bass-heavy out of the box, but the EQ in the Sony app lets you tune it. I dropped the bass 3dB and boosted mids 2dB and now they sound much more balanced for jazz. Comfort is exceptional, barely noticed them after 6 hours."
+  },
+  {
+    "headphone_slug": "sony-wh-1000xm5",
+    "source_type": "review",
+    "source_url": "https://www.soundguys.com/sony-xm5-review/",
+    "chunk_text": "For office use, the speak-to-chat feature is genuinely useful - automatically pauses music when you start talking. The multipoint connection works flawlessly between my Mac and iPhone. Call quality is excellent thanks to the 8-microphone array. However, the ANC creates noticeable cabin pressure feeling for some users, and I experienced slight ear fatigue after 2-3 hours of continuous use."
+  },
+  {
+    "headphone_slug": "sony-wh-1000xm5",
+    "source_type": "expert_review",
+    "source_url": "https://www.whathifi.com/sony-wh-1000xm5-review",
+    "chunk_text": "The bass response extends deep into sub-bass territory with a gentle boost peaking around 60Hz. This tuning makes electronic music and modern hip-hop sound punchy and exciting but can overwhelm acoustic instruments. The midrange is slightly recessed between 1-3kHz, which reduces vocal presence compared to more neutral headphones. Treble rolls off smoothly above 8kHz, resulting in a forgiving, fatigue-free sound for extended listening."
+  },
+  {
+    "headphone_slug": "sony-wh-1000xm5",
+    "source_type": "forum_post",
+    "source_url": "https://www.head-fi.org/threads/xm5-gaming-latency.89234/",
+    "chunk_text": "Warning for gamers: there's noticeable latency over Bluetooth, around 150-200ms in my testing. Fine for single-player games but terrible for competitive shooters or rhythm games. The gaming mode in the app helps a bit but still not suitable for latency-sensitive use. Stick to wired headphones or low-latency wireless gaming headsets if that's your primary use case."
+  },
+  {
+    "headphone_slug": "audio-technica-ath-m50x",
+    "source_type": "expert_review",
+    "source_url": "https://www.soundonsound.com/reviews/audio-technica-ath-m50x",
+    "chunk_text": "The M50x exhibits a pronounced V-shaped frequency response with significant bass emphasis below 150Hz and elevated treble above 4kHz. This tuning makes drums and percussion sound exciting but can fatigue ears during long mixing sessions. The midrange is recessed, particularly in the 1-2kHz range, which reduces vocal clarity compared to true reference headphones like the K371 or HD 600."
+  },
+  {
+    "headphone_slug": "audio-technica-ath-m50x",
+    "source_type": "review",
+    "source_url": "https://www.musicradar.com/reviews/ath-m50x",
+    "chunk_text": "Industry standard in home studios for a reason - the M50x isolates noise extremely well and is built like a tank. I've thrown these in backpacks, dropped them, used them daily for 4 years and they still work perfectly. The coiled cable is annoying for portable use though, get the shorter straight cable from the package. Sound is fun and punchy which makes them more enjoyable for casual listening than flat studio monitors."
+  },
+  {
+    "headphone_slug": "audio-technica-ath-m50x",
+    "source_type": "forum_post",
+    "source_url": "https://www.reddit.com/r/audioengineering/comments/m50x_mixing/",
+    "chunk_text": "Been mixing on M50x for 2 years. Pros: Excellent isolation for tracking vocals, durable, cheap to replace if they break, fold up nicely. Cons: The V-shape means I always over-correct bass and treble in my mixes - they sound thin on other systems. I now use these only for tracking and switched to Beyerdynamic DT 880 for actual mixing. The ear cups get hot after an hour too."
+  },
+  {
+    "headphone_slug": "audio-technica-ath-m50x",
+    "source_type": "review",
+    "source_url": "https://www.head-fi.org/showcase/audio-technica-ath-m50x.19339/reviews",
+    "chunk_text": "For electronic music and hip-hop production, the M50x hits differently than neutral headphones. The bass boost helps identify sub-bass issues and the treble peak makes hi-hats and cymbals easy to place in the mix. However, if you're doing acoustic recordings or classical work, these will mislead you - vocals sound shouty and strings can be harsh. They're specialized tools, not all-purpose monitors."
+  },
+  {
+    "headphone_slug": "audio-technica-ath-m50x",
+    "source_type": "forum_post",
+    "source_url": "https://www.gearslutz.com/board/m50x-comfort-mod/",
+    "chunk_text": "The stock pads are pretty uncomfortable after 90 minutes - they're shallow and press against your ears. I swapped to Brainwavz sheepskin pads and comfort improved dramatically. Warning though: pad swapping changes the sound, adds more bass and smooths out the harsh treble peaks. Some purists hate this, but I prefer it for long sessions. The clamping force is also really tight initially, you need to stretch the headband."
+  },
+  {
+    "headphone_slug": "audio-technica-ath-m50x",
+    "source_type": "expert_review",
+    "source_url": "https://www.innerfidelity.com/content/excellent-audio-technica-ath-m50x",
+    "chunk_text": "Distortion measurements are low across the frequency spectrum, with THD staying below 1% even at high SPLs. The 45mm drivers handle complex metal and rock passages without breaking up. Impedance is a nominal 38 ohms making them easy to drive from portable devices, though they benefit from a clean amplifier to control the bass. The swivel mechanism allows for single-ear monitoring, a must-have for DJ work."
+  },
+  {
+    "headphone_slug": "apple-airpods-max",
+    "source_type": "expert_review",
+    "source_url": "https://www.rtings.com/headphones/reviews/apple/airpods-max",
+    "chunk_text": "The AirPods Max measure surprisingly neutral for consumer headphones, tracking close to the Harman target curve with minimal deviation. The computational audio processing via the H1 chip provides adaptive EQ that adjusts to fit and seal, resulting in consistent sound across different head shapes. Spatial Audio with head tracking creates a convincing surround effect for Apple TV content, though it works best in a quiet environment where ANC can function optimally."
+  },
+  {
+    "headphone_slug": "apple-airpods-max",
+    "source_type": "review",
+    "source_url": "https://www.theverge.com/airpods-max-review",
+    "chunk_text": "As an Apple ecosystem user, the seamless switching between iPhone, iPad, and Mac is unmatched. The build quality feels premium - the aluminum cups and stainless steel headband are gorgeous but also heavy at 385g. After 2 hours my neck starts to feel fatigued. The case is utterly useless, doesn't protect the ear cups at all. But the sound quality is excellent for wireless, better than Sony XM5 for acoustic and classical music due to more neutral tuning."
+  },
+  {
+    "headphone_slug": "apple-airpods-max",
+    "source_type": "forum_post",
+    "source_url": "https://www.reddit.com/r/apple/comments/airpods_max_weight/",
+    "chunk_text": "Wanted to love these but the weight is a real problem. I wear them at my desk and they're fine for an hour, but using them on flights is uncomfortable - the headband digs into the top of my head. I'm 5'7\" with a smaller head, larger people might fare better. Also, no USB-C in 2024 is ridiculous for a $550 headphone. The Lightning port makes me worry about longevity when Apple inevitably kills Lightning completely."
+  },
+  {
+    "headphone_slug": "apple-airpods-max",
+    "source_type": "review",
+    "source_url": "https://www.soundguys.com/apple-airpods-max-review/",
+    "chunk_text": "The transparency mode is the best I've tested - sounds completely natural, better than Sony and Bose. You can have conversations without removing the headphones. ANC is top-tier for mid and high frequencies but Sony XM5 still edges it out for low-frequency rumble. The Digital Crown is brilliant for volume control, way better than touch controls. Main issues: condensation can build up in the cups during workouts, and the smart case puts them in ultra-low-power mode, not off, so battery slowly drains."
+  },
+  {
+    "headphone_slug": "apple-airpods-max",
+    "source_type": "expert_review",
+    "source_url": "https://www.whathifi.com/apple-airpods-max-review",
+    "chunk_text": "The AirPods Max deliver exceptional detail retrieval for wireless headphones. Subtle textures in jazz recordings are well-preserved, and the bass is tight and controlled rather than bloated. The computational audio features sometimes create an unnatural processing sound with classical recordings - you can hear artifacts when head tracking is active. For the price, you're paying a significant Apple tax; the Focal Bathys and Sennheiser Momentum 4 offer comparable or better sound quality for less money, but lack the ecosystem integration."
+  },
+  {
+    "headphone_slug": "apple-airpods-max",
+    "source_type": "forum_post",
+    "source_url": "https://www.macrumors.com/forum/airpods-max-spatial-audio/",
+    "chunk_text": "Spatial Audio is a gimmick for music but genuinely great for movies. Watching Dune on Apple TV+ with these was an immersive experience - the head tracking made the soundstage follow screen position which increased presence. For music though, it makes everything sound like you're in a concert hall even when the recording was meant to be intimate. I keep it off for music, on for video content. Battery life is excellent, easily 18-20 hours with ANC and Bluetooth."
+  },
+  {
+    "headphone_slug": "beyerdynamic-dt-770-pro",
+    "source_type": "expert_review",
+    "source_url": "https://www.soundonsound.com/reviews/beyerdynamic-dt770-pro-80",
+    "chunk_text": "The DT 770 Pro exhibits a V-shaped response with significant bass elevation below 150Hz and a prominent treble peak around 8-9kHz. The 80-ohm version strikes a balance between portability and sound quality - it can be driven adequately from interfaces but benefits from a dedicated amp. The bass is tight and punchy, excellent for electronic music mixing, though the treble peak can induce fatigue during extended sessions and may make sibilance sound harsh."
+  },
+  {
+    "headphone_slug": "beyerdynamic-dt-770-pro",
+    "source_type": "review",
+    "source_url": "https://www.head-fi.org/showcase/beyerdynamic-dt770-pro-80.25177/reviews",
+    "chunk_text": "The comfort is legendary - velour pads stay cool even after 8+ hour studio sessions, and the clamping force is perfect. I'm a glasses wearer and these don't cause pressure points. Build quality is German-engineered tank level: metal headband, replaceable parts, basically bulletproof. The coiled cable is absurdly long though, you'll need a cable tie or it drags on the floor. Sound isolation is excellent for a closed-back, great for tracking drums without bleed."
+  },
+  {
+    "headphone_slug": "beyerdynamic-dt-770-pro",
+    "source_type": "forum_post",
+    "source_url": "https://www.reddit.com/r/headphones/comments/dt770_treble_harsh/",
+    "chunk_text": "The treble peak is no joke - these made my poorly recorded metal tracks sound painful. I had to EQ down 8-9kHz by about 4dB to make them listenable for long sessions. If you're treble-sensitive, get the 250-ohm version which is reportedly smoother, or just EQ. The bass is incredible though, tight and punchy without bloat. Perfect for EDM production and beat-making. I've owned these for 7 years, replaced the pads twice, still going strong."
+  },
+  {
+    "headphone_slug": "beyerdynamic-dt-770-pro",
+    "source_type": "review",
+    "source_url": "https://www.gearslutz.com/board/dt770-mixing-review/",
+    "chunk_text": "For rock and metal mixing, the DT 770 excels at revealing guitar distortion and drum transients. The isolation lets you crank them loud without disturbing roommates. However, the recessed mids mean vocals sit back in the mix - I constantly had to check my mixes on other systems because vocals were too quiet. These are tracking headphones, not mixing headphones. Use them for recording and checking balances, but not for final mix decisions."
+  },
+  {
+    "headphone_slug": "beyerdynamic-dt-770-pro",
+    "source_type": "expert_review",
+    "source_url": "https://reference-audio-analyzer.pro/en/review/dt770-pro-80.php",
+    "chunk_text": "Frequency measurements show +6dB bass boost centered at 80Hz and a sharp peak at 8.5kHz reaching +8dB. The midrange dip around 2kHz creates a 'scooped' sound that reduces vocal presence. Despite this coloration, the headphones exhibit low distortion and good transient response. The 80-ohm impedance makes them suitable for portable use with audio interfaces, drawing reasonable power even from USB bus-powered devices."
+  },
+  {
+    "headphone_slug": "beyerdynamic-dt-770-pro",
+    "source_type": "forum_post",
+    "source_url": "https://www.head-fi.org/threads/dt770-gaming.892341/",
+    "chunk_text": "Fantastic for gaming - the closed-back design blocks out household noise and the V-shape makes footsteps and gunshots really stand out in FPS games. The soundstage is wider than you'd expect from closed-backs, decent imaging for competitive play. The bass rumble makes explosions feel impactful in single-player games. Only issue is the non-detachable cable means you need a separate mic solution. I use a ModMic with these and it's perfect."
+  },
+  {
+    "headphone_slug": "sennheiser-momentum-4",
+    "source_type": "expert_review",
+    "source_url": "https://www.rtings.com/headphones/reviews/sennheiser/momentum-4-wireless",
+    "chunk_text": "The Momentum 4 delivers the most accurate wireless sound we've measured, closely tracking the Harman target with only minor deviations. The bass is slightly elevated but well-controlled, the mids are natural and detailed, and the treble is smooth without harshness. The 60-hour battery life is exceptional, more than doubling the Sony XM5 and AirPods Max. ANC is effective but not class-leading - it reduces low-frequency noise by about 30dB compared to 38dB on the XM5."
+  },
+  {
+    "headphone_slug": "sennheiser-momentum-4",
+    "source_type": "review",
+    "source_url": "https://www.whathifi.com/sennheiser-momentum-4-review",
+    "chunk_text": "For audiophile wireless listening, the Momentum 4 is unmatched. I compared them extensively to my wired HD 650 and was shocked how close they sounded over LDAC. The detail retrieval is excellent for Bluetooth - subtle reverb tails in acoustic recordings are clearly audible. The tuning is more neutral than Sony or Bose, making them better for classical and jazz. However, the design is more utilitarian than the beautiful Momentum 3 - they look generic and plasticky by comparison."
+  },
+  {
+    "headphone_slug": "sennheiser-momentum-4",
+    "source_type": "forum_post",
+    "source_url": "https://www.reddit.com/r/headphones/comments/momentum4_battery/",
+    "chunk_text": "The 60-hour battery life is insane - I charge these maybe once every 3 weeks with daily 2-hour commute use. The Tile integration is useful for finding them when I inevitably leave them somewhere. The EQ in the Sennheiser app actually works well, I boosted the bass slightly for gym use. Comfort is very good, though the cups are smaller than Sony XM5 and my ears touch the driver grills slightly. People with large ears might have issues."
+  },
+  {
+    "headphone_slug": "sennheiser-momentum-4",
+    "source_type": "review",
+    "source_url": "https://www.soundguys.com/sennheiser-momentum-4-review/",
+    "chunk_text": "The touch controls take some getting used to - the entire right cup is a touch surface and it's easy to accidentally trigger when adjusting fit. The transparency mode is mediocre compared to Apple and Sony, sounds artificial and compressed. But the multipoint Bluetooth works flawlessly, switching between my work laptop and phone automatically. Call quality is excellent for video meetings. These replace my desktop headphones for work-from-home days."
+  },
+  {
+    "headphone_slug": "sennheiser-momentum-4",
+    "source_type": "expert_review",
+    "source_url": "https://www.techradar.com/reviews/sennheiser-momentum-4",
+    "chunk_text": "The LDAC codec over Android provides noticeably better sound quality than standard SBC or AAC. Hi-res FLAC files retain their detail and nuance. The aptX Adaptive support also works well for lower-latency applications. However, the ANC creates a noticeable cabin pressure sensation that some users find uncomfortable during flights. The isolation without ANC is mediocre - I can hear keyboard typing in a quiet office even with music playing."
+  },
+  {
+    "headphone_slug": "sennheiser-momentum-4",
+    "source_type": "forum_post",
+    "source_url": "https://www.head-fi.org/threads/momentum-4-vs-xm5.962341/",
+    "chunk_text": "Switched from XM5 to Momentum 4 for the better sound quality and haven't looked back. The Sennheiser sounds more natural and balanced - less bass bloat, clearer mids, smoother treble. The XM5 is better for travel due to superior ANC, but for home/office listening the Momentum 4 is the clear winner. The included carrying case is also much better, actually protective unlike Sony's pouch. Wish they had folding hinges though."
+  },
+  {
+    "headphone_slug": "bose-qc45",
+    "source_type": "expert_review",
+    "source_url": "https://www.rtings.com/headphones/reviews/bose/quietcomfort-45",
+    "chunk_text": "The QC45 excels at comfort above all else - the plush earpads and lightweight design make these the most comfortable headphones we've tested for all-day wear. The ANC is excellent for office environments, effectively blocking out HVAC noise and conversations. However, the sound signature is safe and uninspiring with rolled-off treble and modest bass. They sound muffled compared to Sony or Sennheiser, trading sonic accuracy for a fatigue-free listening experience."
+  },
+  {
+    "headphone_slug": "bose-qc45",
+    "source_type": "review",
+    "source_url": "https://www.cnet.com/bose-qc45-review",
+    "chunk_text": "I fly 100+ times per year and the QC45 is my travel essential. The comfort is unmatched - I've worn these for 12-hour flights without any discomfort. The ANC isn't quite as strong as Sony XM5 for airplane rumble, but the overall noise reduction is still excellent. The sound is warm and pleasant, not exciting but never fatiguing. Battery life is solid at 24 hours. My only complaint is the lack of any premium feel - they're all plastic and feel cheap for $329."
+  },
+  {
+    "headphone_slug": "bose-qc45",
+    "source_type": "forum_post",
+    "source_url": "https://www.reddit.com/r/bose/comments/qc45_office/",
+    "chunk_text": "Perfect office headphones for all-day Zoom calls. The mic quality is exceptional - colleagues say I sound clearer than on my laptop mic. The comfort means I forget I'm wearing them. The ANC blocks out my loud mechanical keyboard (tactile switches) almost completely. Sound is boring for music though - I have Sony XM5 for after-work listening and the difference is night and day. These are tools for productivity, not audiophile headphones."
+  },
+  {
+    "headphone_slug": "bose-qc45",
+    "source_type": "review",
+    "source_url": "https://www.techradar.com/reviews/bose-qc45",
+    "chunk_text": "The Bose app is minimalist to a fault - just EQ presets, no custom EQ. The modes are limited to Quiet (ANC on) and Aware (transparency). No ambient sound customization like Sony offers. But the simplicity is kind of nice - they just work without fiddling. USB-C charging is a welcome upgrade from QC35 II. The folding design makes them very portable. The included case is adequate but not premium."
+  },
+  {
+    "headphone_slug": "bose-qc45",
+    "source_type": "expert_review",
+    "source_url": "https://www.soundguys.com/bose-qc45-review/",
+    "chunk_text": "Frequency response shows significant treble roll-off above 4kHz, resulting in a dark, veiled sound signature. The bass is modestly elevated around 100Hz but not excessive. This tuning makes the QC45 extremely non-fatiguing - you can listen for hours without ear fatigue. However, detail retrieval suffers and music lacks sparkle and air. The codec support is limited to SBC and AAC, no LDAC or aptX, which is disappointing at this price point."
+  },
+  {
+    "headphone_slug": "bose-qc45",
+    "source_type": "forum_post",
+    "source_url": "https://www.head-fi.org/threads/qc45-glasses.951234/",
+    "chunk_text": "I wear thick-framed glasses and the QC45 is one of the few headphones I can wear all day without pressure pain. The pads are soft enough to form around the glasses arms. The ANC performance isn't degraded much by the glasses breaking the seal either. I tried Sony XM5 and they created painful pressure points after an hour with glasses. For glasses wearers, QC45 is the way to go."
+  },
+  {
+    "headphone_slug": "philips-shp9500",
+    "source_type": "expert_review",
+    "source_url": "https://www.rtings.com/headphones/reviews/philips/shp9500",
+    "chunk_text": "At under $80, the SHP9500 delivers exceptional value with a neutral-bright sound signature and impressive soundstage width. The open-back design creates an airy, spacious presentation that works beautifully for orchestral music. The bass is light, rolling off below 80Hz, which will disappoint bass-heads but suits acoustic genres. The treble is slightly elevated around 7kHz, adding sparkle without harshness. These punch well above their budget price class."
+  },
+  {
+    "headphone_slug": "philips-shp9500",
+    "source_type": "forum_post",
+    "source_url": "https://www.reddit.com/r/headphones/comments/shp9500_entry/",
+    "chunk_text": "The SHP9500 is the perfect entry into open-back headphones. Coming from gaming headsets, the soundstage blew me away - you can actually hear positional audio in games. They're insanely comfortable too, the foam pads breathe well and there's almost no clamping force. Sound leaks massively though, everyone in the room will hear what you're listening to. Also the bass is really light - Spotify sounds thin until you EQ up the low end a few dB."
+  },
+  {
+    "headphone_slug": "philips-shp9500",
+    "source_type": "review",
+    "source_url": "https://www.head-fi.org/showcase/philips-shp9500.21848/reviews",
+    "chunk_text": "For the price, these are absurd value. I compared them to my Sennheiser HD 598 that cost 3x as much and honestly preferred the SHP9500 for classical music - the upper midrange clarity makes violins and vocals shine. The build quality is all plastic but feels sturdy enough. The detachable cable is a huge plus, I swapped to a V-Moda BoomPro cable and now use these as my gaming headset. Way better than any 'gaming' headphones I've tried."
+  },
+  {
+    "headphone_slug": "philips-shp9500",
+    "source_type": "forum_post",
+    "source_url": "https://www.audiosciencereview.com/forum/shp9500-measurements/",
+    "chunk_text": "The measurements show why these sound so good - very linear from 300Hz to 3kHz with minimal deviation. The bass shelf is high (around 200Hz) which is why they sound lean, but you can fix this with Oratory1990's EQ preset. The treble peak at 7kHz adds some brightness but it's not harsh like some budget headphones. The angled drivers help create a wider soundstage than typical for the price."
+  },
+  {
+    "headphone_slug": "philips-shp9500",
+    "source_type": "review",
+    "source_url": "https://www.amazon.com/reviews/SHP9500",
+    "chunk_text": "Best headphones under $100 hands down. I use them for video editing and the neutral sound helps me mix dialogue accurately. The comfort is incredible - I wear them 6-8 hours daily and never get fatigued. The ear cups are huge and fully surround my ears. Only downsides: bass is weak (fine for my use), they're not portable (no folding), and the cable connection is a bit loose and can pop out if you snag it."
+  },
+  {
+    "headphone_slug": "philips-shp9500",
+    "source_type": "forum_post",
+    "source_url": "https://www.head-fi.org/threads/shp9500-pad-swap.923421/",
+    "chunk_text": "Don't pad swap these! I tried HM5 velour pads and it killed the sound - bass increased but mids got muddy and soundstage collapsed. The stock pads are designed specifically for the tuning. They are kind of shallow though, my ears touch the driver grills slightly. I bent the metal clips slightly to increase the pad distance and now they're perfect. Such an easy mod."
+  },
+  {
+    "headphone_slug": "focal-bathys",
+    "source_type": "expert_review",
+    "source_url": "https://www.whathifi.com/focal-bathys-review",
+    "chunk_text": "The Bathys represents the pinnacle of wireless headphone sound quality. The aluminum-magnesium M-shaped drivers deliver audiophile-grade detail and accuracy that rivals $1000+ wired headphones. The DAC mode over USB-C bypasses Bluetooth entirely, providing bit-perfect playback of hi-res files. The tonal balance is neutral with slight warmth, exceptional midrange clarity, and controlled bass extension. At $699, these compete directly with wired flagships while offering wireless convenience."
+  },
+  {
+    "headphone_slug": "focal-bathys",
+    "source_type": "review",
+    "source_url": "https://www.stereophile.com/content/focal-bathys-review",
+    "chunk_text": "As someone who owns the wired Focal Clear, the Bathys impresses me with how close it gets to that level of performance wirelessly. The resolving power is exceptional - subtle micro-details in acoustic recordings are clearly audible. The DAC mode is genuinely transparent, I A/B tested against my desktop stack and couldn't reliably tell the difference. However, they're heavy at 350g and the ANC is mediocre compared to Sony. These are for critical listening at home, not travel."
+  },
+  {
+    "headphone_slug": "focal-bathys",
+    "source_type": "forum_post",
+    "source_url": "https://www.reddit.com/r/headphones/comments/bathys_worth_it/",
+    "chunk_text": "Bought these after extensive research into flagship wireless options. Coming from Sennheiser HD 660S, the Bathys sounds more dynamic and detailed wirelessly than my 660S does wired. The bass is punchy but not bloated, mids are gorgeous for vocals, treble is extended without sibilance. Build quality is luxurious - real leather, metal construction, feels like $700. But the mediocre app and basic ANC are disappointing. You're paying for sound quality only."
+  },
+  {
+    "headphone_slug": "focal-bathys",
+    "source_type": "expert_review",
+    "source_url": "https://www.soundguys.com/focal-bathys-review/",
+    "chunk_text": "The USB DAC mode implementation is excellent, supporting up to 24-bit/192kHz playback with low latency. Measurements show ruler-flat frequency response from 100Hz to 2kHz with only minor deviations in the treble. THD remains below 0.5% even at high SPLs, indicating clean driver behavior. The ANC reduces ambient noise by approximately 25dB, adequate for office use but not competitive with Sony or Bose for travel."
+  },
+  {
+    "headphone_slug": "focal-bathys",
+    "source_type": "review",
+    "source_url": "https://www.techradar.com/reviews/focal-bathys",
+    "chunk_text": "The 30-hour battery life (ANC off) is decent but not exceptional compared to Momentum 4's 60 hours. Bluetooth multipoint works but switching isn't as seamless as Sony. The carrying case is premium with hard shell protection. The comfort is good but the weight becomes noticeable after 2-3 hours. The clamp is firm which aids with bass response but can fatigue. These excel at critical music listening and fail at being all-purpose travel headphones."
+  },
+  {
+    "headphone_slug": "focal-bathys",
+    "source_type": "forum_post",
+    "source_url": "https://www.head-fi.org/threads/bathys-vs-clear-mg.971235/",
+    "chunk_text": "I own both the Bathys and Clear MG. The Clear MG sounds slightly better wired - more expansive soundstage, tighter bass, better treble extension. But the Bathys gets 90% of the way there with the convenience of wireless and ANC. For desktop listening I use the Clear MG, for travel and portable use the Bathys is unbeatable. The DAC mode on Bathys is excellent but still not quite as good as a dedicated desktop setup with the Clear MG."
+  },
+  {
+    "headphone_slug": "hyperx-cloud-ii",
+    "source_type": "review",
+    "source_url": "https://www.rtings.com/headphones/reviews/hyperx/cloud-ii",
+    "chunk_text": "The HyperX Cloud II offers exceptional value for gaming, with a fun V-shaped sound that emphasizes bass and treble. The soundstage is decent for a closed-back gaming headset, providing adequate positional audio for FPS games. The memory foam ear cups are comfortable for extended sessions. The detachable microphone has clear voice quality for team chat. At $99, these outperform many headphones twice the price for gaming and casual music listening."
+  },
+  {
+    "headphone_slug": "hyperx-cloud-ii",
+    "source_type": "forum_post",
+    "source_url": "https://www.reddit.com/r/pcgaming/comments/cloud2_gaming/",
+    "chunk_text": "Used these for 2000+ hours of Valorant and CS:GO. The positional audio is good enough for competitive play - I can hear footstep direction accurately. The bass is boosted which makes explosions and gunshots punchy but doesn't muddy the important frequencies for hearing enemies. Comfort is great, I game 4-6 hour sessions regularly with no issues. The mic quality is solid for Discord. Way better than any 'audiophile' headphones I tried for gaming."
+  },
+  {
+    "headphone_slug": "hyperx-cloud-ii",
+    "source_type": "review",
+    "source_url": "https://www.techpowerup.com/review/hyperx-cloud-ii/",
+    "chunk_text": "The build quality is impressive for the price - aluminum frame feels durable, braided cables resist tangling, and the earcups swivel for storage. The 7.1 virtual surround USB sound card is gimmicky and makes everything sound worse - I use these in stereo mode exclusively. The bass can be boomy with some music genres, but for gaming it's perfect. The passive noise isolation is good enough to block out keyboard noise and household sounds."
+  },
+  {
+    "headphone_slug": "hyperx-cloud-ii",
+    "source_type": "forum_post",
+    "source_url": "https://www.overclock.net/threads/cloud-ii-music.1823456/",
+    "chunk_text": "Bought these for gaming but ended up using them for music too. They sound surprisingly good for hip-hop and EDM - the bass hits hard without being muddy. Vocals are a bit recessed but not terrible. For rock and metal they're fantastic. They're not reference headphones, but for $99 they're great all-rounders. I compared them to my Audio-Technica M50x and preferred the Cloud II for comfort, M50x sounded slightly better but was way less comfortable."
+  },
+  {
+    "headphone_slug": "hyperx-cloud-ii",
+    "source_type": "review",
+    "source_url": "https://www.head-fi.org/showcase/hyperx-cloud-ii.20145/reviews",
+    "chunk_text": "The 53mm drivers provide good dynamics and punch. The impedance is low at 60 ohms making them easy to drive from controllers and phones. Cable management is awkward with the inline volume control box dangling, but the 1m+2m cable setup is practical for desktop use. The included velour pads are a nice option if the leatherette gets too warm. These compete well with $150-200 headphones purely on sound, the mic is just a bonus."
+  },
+  {
+    "headphone_slug": "hyperx-cloud-ii",
+    "source_type": "expert_review",
+    "source_url": "https://www.soundguys.com/hyperx-cloud-ii-review/",
+    "chunk_text": "Frequency response shows significant bass boost below 150Hz and treble emphasis above 5kHz, creating an exciting sound signature for gaming. The midrange dip around 1-2kHz reduces vocal presence but enhances game sound effects. The detachable mic uses a basic electret capsule with decent noise rejection. Latency over the analog connection is zero, making these suitable for competitive gaming where Bluetooth would introduce unacceptable delay."
+  },
+  {
+    "headphone_slug": "akg-k371",
+    "source_type": "expert_review",
+    "source_url": "https://www.rtings.com/headphones/reviews/akg/k371",
+    "chunk_text": "The K371 follows the Harman target curve almost perfectly, making them among the most accurately tuned headphones at any price. The bass extends deep with excellent sub-bass presence, the midrange is neutral and detailed, and the treble is smooth and well-extended. The 50mm drivers provide exceptional dynamic range. The collapsible design and included cables (straight, coiled, 2.5mm balanced) make these incredibly versatile. At $149, they offer flagship-level sound quality."
+  },
+  {
+    "headphone_slug": "akg-k371",
+    "source_type": "review",
+    "source_url": "https://www.soundguys.com/akg-k371-review/",
+    "chunk_text": "Coming from Audio-Technica M50x, the K371 sounds more natural and balanced. The bass is present but not exaggerated, vocals are clear and forward, treble is smooth without harshness. These are true reference headphones suitable for mixing and critical listening. The comfort is excellent with soft protein leather pads. However, build quality is the weak point - the plastic hinges feel fragile and there are many reports of them breaking. Mine survived 18 months of daily use but I baby them."
+  },
+  {
+    "headphone_slug": "akg-k371",
+    "source_type": "forum_post",
+    "source_url": "https://www.reddit.com/r/headphones/comments/k371_mixing/",
+    "chunk_text": "I mix on K371 exclusively now after trying many headphones. The Harman tuning makes it easy to create mixes that translate well to other systems. Bass is accurate so you don't over-compensate, mids are detailed enough to EQ vocals precisely, treble doesn't lie about sibilance. I A/B with my studio monitors and the translation is excellent. Warning: the bass port can rattle at high SPLs with heavy bass music. Doesn't affect mixing levels but annoying for loud casual listening."
+  },
+  {
+    "headphone_slug": "akg-k371",
+    "source_type": "review",
+    "source_url": "https://www.head-fi.org/showcase/akg-k371.23826/reviews",
+    "chunk_text": "These are my favorite headphones under $300. The tonal accuracy is exceptional - acoustic instruments sound natural and realistic. The soundstage is decent for closed-back, not as wide as open headphones but adequate for most music. The isolation is good for home studio use. The folding mechanism is convenient for travel. The cables are high quality with good strain relief. I use the balanced cable with my Fiio Q3 DAC/amp and the difference over the standard cable is noticeable."
+  },
+  {
+    "headphone_slug": "akg-k371",
+    "source_type": "expert_review",
+    "source_url": "https://www.audiosciencereview.com/forum/akg-k371-measurements/",
+    "chunk_text": "Measurements show less than 3dB deviation from the Harman target across the entire audible spectrum. Bass extends flat to 30Hz before rolling off. THD is low below 90dB SPL, increasing slightly at high volumes. The impedance is a consistent 32 ohms making them easy to drive. The sensitivity is high at 114dB SPL/V, so they get loud even from weak sources. These measure better than many $500+ headphones."
+  },
+  {
+    "headphone_slug": "akg-k371",
+    "source_type": "forum_post",
+    "source_url": "https://www.head-fi.org/threads/k371-durability.941235/",
+    "chunk_text": "The durability issues are real - my left hinge cracked after 8 months of gentle use. AKG replaced them under warranty but the replacement also cracked after a year. I now store them fully extended in the case to avoid folding stress. The sound is so good I tolerate the fragility, but it's frustrating at this price point. If they made these with Beyerdynamic build quality they'd be perfect headphones. Consider the K361 if durability is a priority."
+  }
+]

@@ -127,6 +127,13 @@ class Headphone(Base, UUIDMixin, TimestampMixin):
     #     cascade="all, delete-orphan"
     # )
 
+    review_chunks: Mapped[List["ReviewChunk"]] = relationship(
+        "ReviewChunk",
+        back_populates="headphone",
+        cascade="all, delete-orphan",
+        lazy="selectin"  # Eager load chunks when fetching headphone for RAG
+    )
+
     # Indexes for common queries
     __table_args__ = (
         Index("ix_headphones_price_tier_type", "price_tier", "headphone_type"),

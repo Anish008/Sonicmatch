@@ -1,0 +1,505 @@
+[
+  {
+    "test_id": "subjective_bass_01",
+    "description": "User asking about bass quality for hip-hop",
+    "query_type": "subjective",
+    "should_route_to_rag": true,
+    "user_preference": {
+      "genres": ["hip-hop", "rap", "trap"],
+      "favorite_artists": ["Kendrick Lamar", "Travis Scott"],
+      "favorite_tracks": [],
+      "sound_preferences": {
+        "bass": 0.9,
+        "mids": 0.6,
+        "treble": 0.5,
+        "soundstage": 0.5,
+        "detail": 0.7
+      },
+      "primary_use_case": "casual",
+      "budget_min": 100,
+      "budget_max": 300,
+      "wireless_required": false,
+      "anc_required": false,
+      "open_back_acceptable": false
+    },
+    "expected_relevant_chunks": [
+      {
+        "headphone": "sony-wh-1000xm4",
+        "keywords": ["bass", "sub-bass", "low-end", "hip-hop", "punchy"]
+      },
+      {
+        "headphone": "beats-studio3",
+        "keywords": ["bass-heavy", "beats", "low-frequency"]
+      }
+    ],
+    "expected_top_match": {
+      "slug": "sony-wh-1000xm4",
+      "reason": "Strong bass response praised in reviews, great for hip-hop"
+    }
+  },
+  {
+    "test_id": "subjective_comfort_02",
+    "description": "User asking about comfort for long listening sessions",
+    "query_type": "subjective",
+    "should_route_to_rag": true,
+    "user_preference": {
+      "genres": ["classical", "ambient", "jazz"],
+      "sound_preferences": {
+        "bass": 0.4,
+        "mids": 0.8,
+        "treble": 0.7,
+        "soundstage": 0.9,
+        "detail": 0.8
+      },
+      "primary_use_case": "audiophile",
+      "budget_min": 200,
+      "budget_max": 500,
+      "wireless_required": false,
+      "anc_required": false,
+      "open_back_acceptable": true
+    },
+    "expected_relevant_chunks": [
+      {
+        "headphone": "sennheiser-hd-600",
+        "keywords": ["comfort", "long sessions", "lightweight", "ear pads"]
+      },
+      {
+        "headphone": "beyerdynamic-dt-990-pro",
+        "keywords": ["comfortable", "hours", "plush", "velour"]
+      }
+    ],
+    "expected_top_match": {
+      "slug": "sennheiser-hd-600",
+      "reason": "Renowned comfort for extended listening, neutral signature for classical"
+    }
+  },
+  {
+    "test_id": "subjective_soundstage_03",
+    "description": "User wants wide soundstage for orchestral music",
+    "query_type": "subjective",
+    "should_route_to_rag": true,
+    "user_preference": {
+      "genres": ["classical", "orchestral", "symphonic"],
+      "sound_preferences": {
+        "bass": 0.5,
+        "mids": 0.8,
+        "treble": 0.7,
+        "soundstage": 1.0,
+        "detail": 0.9
+      },
+      "primary_use_case": "audiophile",
+      "budget_min": 150,
+      "budget_max": 400,
+      "wireless_required": false,
+      "anc_required": false,
+      "open_back_acceptable": true
+    },
+    "expected_relevant_chunks": [
+      {
+        "headphone": "philips-shp9500",
+        "keywords": ["soundstage", "wide", "imaging", "spatial", "orchestral"]
+      },
+      {
+        "headphone": "sennheiser-hd-560s",
+        "keywords": ["soundstage", "open-back", "classical", "imaging"]
+      }
+    ],
+    "expected_top_match": {
+      "slug": "sennheiser-hd-560s",
+      "reason": "Exceptional soundstage and imaging, praised for classical music"
+    }
+  },
+  {
+    "test_id": "subjective_build_quality_04",
+    "description": "User concerned about build quality and durability",
+    "query_type": "subjective",
+    "should_route_to_rag": true,
+    "user_preference": {
+      "genres": ["rock", "metal", "indie"],
+      "sound_preferences": {
+        "bass": 0.7,
+        "mids": 0.7,
+        "treble": 0.8,
+        "soundstage": 0.6,
+        "detail": 0.8
+      },
+      "primary_use_case": "casual",
+      "budget_min": 150,
+      "budget_max": 350,
+      "wireless_required": true,
+      "anc_required": false,
+      "open_back_acceptable": false
+    },
+    "expected_relevant_chunks": [
+      {
+        "headphone": "sennheiser-momentum-4",
+        "keywords": ["build quality", "premium", "durable", "materials", "metal"]
+      },
+      {
+        "headphone": "sony-wh-1000xm5",
+        "keywords": ["build", "quality", "premium", "well-made"]
+      }
+    ],
+    "expected_top_match": {
+      "slug": "sennheiser-momentum-4",
+      "reason": "Premium build quality noted in reviews, good sound for rock/metal"
+    }
+  },
+  {
+    "test_id": "subjective_vocal_clarity_05",
+    "description": "User prioritizes vocal clarity and midrange detail",
+    "query_type": "subjective",
+    "should_route_to_rag": true,
+    "user_preference": {
+      "genres": ["indie", "folk", "acoustic"],
+      "sound_preferences": {
+        "bass": 0.4,
+        "mids": 0.95,
+        "treble": 0.7,
+        "soundstage": 0.7,
+        "detail": 0.9
+      },
+      "primary_use_case": "audiophile",
+      "budget_min": 100,
+      "budget_max": 250,
+      "wireless_required": false,
+      "anc_required": false,
+      "open_back_acceptable": true
+    },
+    "expected_relevant_chunks": [
+      {
+        "headphone": "akg-k371",
+        "keywords": ["vocals", "midrange", "clarity", "clear", "voice"]
+      },
+      {
+        "headphone": "sennheiser-hd-600",
+        "keywords": ["mids", "vocal", "natural", "acoustic"]
+      }
+    ],
+    "expected_top_match": {
+      "slug": "sennheiser-hd-600",
+      "reason": "Legendary midrange and vocal reproduction for acoustic music"
+    }
+  },
+  {
+    "test_id": "structured_wireless_anc_06",
+    "description": "Purely technical requirements: wireless + ANC under $200",
+    "query_type": "structured",
+    "should_route_to_rag": false,
+    "user_preference": {
+      "genres": ["pop", "electronic"],
+      "sound_preferences": {
+        "bass": 0.6,
+        "mids": 0.6,
+        "treble": 0.6,
+        "soundstage": 0.5,
+        "detail": 0.6
+      },
+      "primary_use_case": "travel",
+      "budget_min": 100,
+      "budget_max": 200,
+      "wireless_required": true,
+      "anc_required": true,
+      "open_back_acceptable": false
+    },
+    "expected_top_match": {
+      "slug": "anker-soundcore-q30",
+      "reason": "Budget wireless ANC option under $200"
+    }
+  },
+  {
+    "test_id": "structured_budget_only_07",
+    "description": "Simple budget query without subjective requirements",
+    "query_type": "structured",
+    "should_route_to_rag": false,
+    "user_preference": {
+      "genres": ["pop", "rock"],
+      "sound_preferences": {
+        "bass": 0.5,
+        "mids": 0.5,
+        "treble": 0.5,
+        "soundstage": 0.5,
+        "detail": 0.5
+      },
+      "primary_use_case": "casual",
+      "budget_min": 30,
+      "budget_max": 80,
+      "wireless_required": false,
+      "anc_required": false,
+      "open_back_acceptable": false
+    },
+    "expected_top_match": {
+      "slug": "kz-zsn-pro-x",
+      "reason": "Best budget option under $80"
+    }
+  },
+  {
+    "test_id": "subjective_gaming_footsteps_08",
+    "description": "Gamer asking about hearing footsteps and positional audio",
+    "query_type": "subjective",
+    "should_route_to_rag": true,
+    "user_preference": {
+      "genres": ["gaming", "electronic"],
+      "sound_preferences": {
+        "bass": 0.6,
+        "mids": 0.7,
+        "treble": 0.8,
+        "soundstage": 0.9,
+        "detail": 0.9
+      },
+      "primary_use_case": "gaming",
+      "budget_min": 100,
+      "budget_max": 300,
+      "wireless_required": false,
+      "anc_required": false,
+      "open_back_acceptable": true
+    },
+    "expected_relevant_chunks": [
+      {
+        "headphone": "beyerdynamic-dt-990-pro",
+        "keywords": ["gaming", "footsteps", "imaging", "detail", "fps"]
+      },
+      {
+        "headphone": "philips-shp9500",
+        "keywords": ["gaming", "positional", "soundstage", "competitive"]
+      }
+    ],
+    "expected_top_match": {
+      "slug": "beyerdynamic-dt-990-pro",
+      "reason": "Excellent imaging and detail for competitive gaming, praised for footstep detection"
+    }
+  },
+  {
+    "test_id": "subjective_edm_impact_09",
+    "description": "EDM listener wants impactful bass and energy",
+    "query_type": "subjective",
+    "should_route_to_rag": true,
+    "user_preference": {
+      "genres": ["edm", "dubstep", "trap"],
+      "sound_preferences": {
+        "bass": 0.95,
+        "mids": 0.5,
+        "treble": 0.7,
+        "soundstage": 0.6,
+        "detail": 0.7
+      },
+      "primary_use_case": "casual",
+      "budget_min": 150,
+      "budget_max": 400,
+      "wireless_required": true,
+      "anc_required": false,
+      "open_back_acceptable": false
+    },
+    "expected_relevant_chunks": [
+      {
+        "headphone": "sony-wh-1000xm4",
+        "keywords": ["bass", "edm", "impact", "sub-bass", "electronic"]
+      },
+      {
+        "headphone": "beats-studio3",
+        "keywords": ["bass", "edm", "punchy", "electronic music"]
+      }
+    ],
+    "expected_top_match": {
+      "slug": "sony-wh-1000xm4",
+      "reason": "Powerful bass praised for EDM, wireless with excellent reviews"
+    }
+  },
+  {
+    "test_id": "subjective_analytical_studio_10",
+    "description": "Producer needs analytical, flat response for mixing",
+    "query_type": "subjective",
+    "should_route_to_rag": true,
+    "user_preference": {
+      "genres": ["all"],
+      "sound_preferences": {
+        "bass": 0.5,
+        "mids": 0.5,
+        "treble": 0.5,
+        "soundstage": 0.7,
+        "detail": 1.0
+      },
+      "primary_use_case": "studio",
+      "budget_min": 150,
+      "budget_max": 400,
+      "wireless_required": false,
+      "anc_required": false,
+      "open_back_acceptable": true
+    },
+    "expected_relevant_chunks": [
+      {
+        "headphone": "beyerdynamic-dt-770-pro",
+        "keywords": ["studio", "mixing", "flat", "neutral", "analytical", "reference"]
+      },
+      {
+        "headphone": "audio-technica-ath-m50x",
+        "keywords": ["studio", "professional", "accurate", "monitoring"]
+      }
+    ],
+    "expected_top_match": {
+      "slug": "beyerdynamic-dt-770-pro",
+      "reason": "Industry-standard studio monitoring headphone with flat response"
+    }
+  },
+  {
+    "test_id": "structured_type_only_11",
+    "description": "Simple query for over-ear wireless under $150",
+    "query_type": "structured",
+    "should_route_to_rag": false,
+    "user_preference": {
+      "genres": ["pop"],
+      "sound_preferences": {
+        "bass": 0.5,
+        "mids": 0.5,
+        "treble": 0.5,
+        "soundstage": 0.5,
+        "detail": 0.5
+      },
+      "primary_use_case": "casual",
+      "budget_min": 50,
+      "budget_max": 150,
+      "preferred_type": "over_ear",
+      "wireless_required": true,
+      "anc_required": false,
+      "open_back_acceptable": false
+    },
+    "expected_top_match": {
+      "slug": "anker-soundcore-life-q20",
+      "reason": "Budget wireless over-ear option"
+    }
+  },
+  {
+    "test_id": "subjective_treble_sensitive_12",
+    "description": "User is treble-sensitive, wants smooth highs",
+    "query_type": "subjective",
+    "should_route_to_rag": true,
+    "user_preference": {
+      "genres": ["jazz", "rnb", "soul"],
+      "sound_preferences": {
+        "bass": 0.6,
+        "mids": 0.8,
+        "treble": 0.3,
+        "soundstage": 0.7,
+        "detail": 0.7
+      },
+      "primary_use_case": "casual",
+      "budget_min": 100,
+      "budget_max": 300,
+      "wireless_required": false,
+      "anc_required": false,
+      "open_back_acceptable": true
+    },
+    "expected_relevant_chunks": [
+      {
+        "headphone": "sennheiser-hd-650",
+        "keywords": ["smooth", "treble", "warm", "relaxed", "non-fatiguing"]
+      },
+      {
+        "headphone": "philips-shp9500",
+        "keywords": ["smooth", "mellow", "warm", "easy listening"]
+      }
+    ],
+    "expected_top_match": {
+      "slug": "sennheiser-hd-650",
+      "reason": "Warm, smooth treble praised for being non-fatiguing"
+    }
+  },
+  {
+    "test_id": "hybrid_gym_durability_13",
+    "description": "User wants wireless for gym with good durability - hybrid structured + subjective",
+    "query_type": "hybrid",
+    "should_route_to_rag": true,
+    "user_preference": {
+      "genres": ["hip-hop", "electronic", "rock"],
+      "sound_preferences": {
+        "bass": 0.8,
+        "mids": 0.6,
+        "treble": 0.6,
+        "soundstage": 0.5,
+        "detail": 0.6
+      },
+      "primary_use_case": "exercise",
+      "budget_min": 50,
+      "budget_max": 150,
+      "wireless_required": true,
+      "anc_required": false,
+      "open_back_acceptable": false
+    },
+    "expected_relevant_chunks": [
+      {
+        "headphone": "jabra-elite-85h",
+        "keywords": ["durable", "gym", "sweat", "exercise", "sturdy"]
+      },
+      {
+        "headphone": "anker-soundcore-life-q30",
+        "keywords": ["workout", "exercise", "durable"]
+      }
+    ],
+    "expected_top_match": {
+      "slug": "jabra-elite-85h",
+      "reason": "Durable wireless headphone praised for exercise use"
+    }
+  },
+  {
+    "test_id": "subjective_jazz_detail_14",
+    "description": "Jazz enthusiast wants to hear every instrument clearly",
+    "query_type": "subjective",
+    "should_route_to_rag": true,
+    "user_preference": {
+      "genres": ["jazz", "blues", "classical"],
+      "sound_preferences": {
+        "bass": 0.5,
+        "mids": 0.9,
+        "treble": 0.8,
+        "soundstage": 0.9,
+        "detail": 1.0
+      },
+      "primary_use_case": "audiophile",
+      "budget_min": 200,
+      "budget_max": 500,
+      "wireless_required": false,
+      "anc_required": false,
+      "open_back_acceptable": true
+    },
+    "expected_relevant_chunks": [
+      {
+        "headphone": "sennheiser-hd-600",
+        "keywords": ["detail", "jazz", "instrument separation", "clarity"]
+      },
+      {
+        "headphone": "beyerdynamic-dt-990-pro",
+        "keywords": ["detail retrieval", "analytical", "jazz", "instrument"]
+      }
+    ],
+    "expected_top_match": {
+      "slug": "sennheiser-hd-600",
+      "reason": "Exceptional detail and instrument separation for jazz"
+    }
+  },
+  {
+    "test_id": "structured_cheapest_15",
+    "description": "User just wants the cheapest headphones that work",
+    "query_type": "structured",
+    "should_route_to_rag": false,
+    "user_preference": {
+      "genres": ["pop"],
+      "sound_preferences": {
+        "bass": 0.5,
+        "mids": 0.5,
+        "treble": 0.5,
+        "soundstage": 0.5,
+        "detail": 0.5
+      },
+      "primary_use_case": "casual",
+      "budget_min": 10,
+      "budget_max": 50,
+      "wireless_required": false,
+      "anc_required": false,
+      "open_back_acceptable": false
+    },
+    "expected_top_match": {
+      "slug": "kz-zsn-pro-x",
+      "reason": "Best ultra-budget option"
+    }
+  }
+]

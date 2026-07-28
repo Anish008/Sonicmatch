@@ -27,6 +27,8 @@ from app.models import (
     AnalyticsEvent,
 )
 from app.services.llm_client import llm_client
+from app.services.rag_router import rag_router
+from app.services.retrieval_engine import RetrievalEngine
 
 logger = structlog.get_logger()
 
@@ -47,6 +49,8 @@ class RecommendationEngine:
         """
         self.db = db
         self.llm = llm_client
+        self.rag_router = rag_router
+        self.retrieval_engine = RetrievalEngine(db)
 
     async def generate_recommendations(
         self,
@@ -112,11 +116,20 @@ class RecommendationEngine:
             # Step 2: Prepare user profile for LLM
             user_profile = self._build_user_profile(preference)
 
-            # Step 3: Call LLM for recommendations
+            # Step 2.5: Route query to determine if RAG is needed
+            routing_decision = await self._route_query(preference, user_profile)
+
+            # Step 2.6: Retrieve relevant chunks if RAG is needed
+            retrieved_chunks = []
+            if self.rag_router.should_use_rag(routing_decision):
+                retrieved_chunks = await self._retrieve_context(preference, candidates)
+
+            # Step 3: Call LLM for recommendations (with optional RAG context)
             llm_response = await self.llm.generate_recommendations(
                 user_profile=user_profile,
                 candidate_headphones=[h.to_dict() for h in candidates],
                 top_n=min(top_n, len(candidates)),
+                retrieved_context=retrieved_chunks if retrieved_chunks else None,
             )
 
             # Step 4: Save matches to database
@@ -161,6 +174,14 @@ class RecommendationEngine:
             if session:
                 session.status = SessionStatus.ERROR
                 session.error_message = "LLM service error"
+                await self.db.commit()
+            raise
+
+        except ValidationException:
+            # Mark session as error and re-raise validation errors
+            if session:
+                session.status = SessionStatus.ERROR
+                session.error_message = "No matching headphones"
                 await self.db.commit()
             raise
 
@@ -271,11 +292,43 @@ class RecommendationEngine:
         # Build user profile
         user_profile = self._build_user_profile(preference)
 
-        # Call LLM for detailed explanation
+        # Retrieve context for this specific headphone (for RAG-enhanced explanation)
+        retrieved_chunks = []
+        if settings.rag_enabled:
+            try:
+                # Build a subjective query for this headphone
+                query = f"sound quality comfort build quality performance {headphone.full_name}"
+
+                results = await self.retrieval_engine.retrieve_for_headphone(
+                    query=query,
+                    headphone_id=str(headphone_id),
+                    top_k=3,  # Fewer chunks for detailed explanation
+                    similarity_threshold=settings.rag_similarity_threshold,
+                )
+
+                retrieved_chunks = [r.to_dict() for r in results]
+
+                logger.info(
+                    "explanation_rag_retrieval",
+                    headphone_id=str(headphone_id),
+                    num_chunks=len(retrieved_chunks),
+                )
+
+            except Exception as e:
+                logger.warning(
+                    "explanation_rag_retrieval_failed",
+                    error=str(e),
+                    headphone_id=str(headphone_id),
+                )
+                # Continue without RAG context
+                retrieved_chunks = []
+
+        # Call LLM for detailed explanation (with optional RAG context)
         explanation = await self.llm.generate_detailed_explanation(
             user_profile=user_profile,
             headphone=target_match.headphone.to_dict(),
             other_headphones=[h.to_dict() for h in other_headphones],
+            retrieved_context=retrieved_chunks if retrieved_chunks else None,
         )
 
         logger.info(
@@ -345,12 +398,12 @@ class RecommendationEngine:
             User profile dictionary
         """
         return {
-            "genres": preference.genres,
-            "favorite_artists": preference.favorite_artists,
-            "favorite_tracks": preference.favorite_tracks,
-            "sound_preferences": preference.sound_preferences,
+            "genres": preference.genres or [],
+            "favorite_artists": preference.favorite_artists or [],
+            "favorite_tracks": preference.favorite_tracks or [],
+            "sound_preferences": preference.sound_preferences or {},
             "primary_use_case": preference.primary_use_case,
-            "secondary_use_cases": preference.secondary_use_cases,
+            "secondary_use_cases": preference.secondary_use_cases or [],
             "budget_min": float(preference.budget_min),
             "budget_max": float(preference.budget_max),
             "wireless_required": preference.wireless_required,
@@ -481,6 +534,7 @@ class RecommendationEngine:
                 personalized_pros=rec["personalized_pros"],
                 personalized_cons=rec["personalized_cons"],
                 match_highlights=rec["match_highlights"],
+                citations=rec.get("citations", []),  # Optional RAG citations
             )
 
             self.db.add(match)
@@ -495,6 +549,182 @@ class RecommendationEngine:
         )
 
         return matches
+
+    async def _route_query(
+        self,
+        preference: UserPreference,
+        user_profile: Dict[str, Any],
+    ) -> Any:
+        """
+        Route query through RAG decision layer.
+
+        Determines if this query needs retrieval-augmented generation
+        based on the presence of subjective/review-based needs.
+
+        Args:
+            preference: User preference object
+            user_profile: Formatted user profile dict
+
+        Returns:
+            RoutingDecision object
+        """
+        # Build query context for routing
+        query_text = self._build_query_text_for_routing(preference)
+        context = {
+            "budget": f"${preference.budget_min}-${preference.budget_max}",
+            "genres": preference.genres or [],
+            "sound_preferences": preference.sound_preferences or {},
+            "use_case": preference.primary_use_case,
+        }
+
+        # Route query
+        routing_decision = await self.rag_router.route_query(
+            query=query_text,
+            context=context,
+        )
+
+        logger.info(
+            "query_routed",
+            needs_rag=routing_decision.needs_rag,
+            confidence=routing_decision.confidence,
+            query_type=routing_decision.query_type,
+            reasoning=routing_decision.reasoning,
+        )
+
+        return routing_decision
+
+    def _build_query_text_for_routing(self, preference: UserPreference) -> str:
+        """
+        Build a textual representation of the user's query for routing.
+
+        Combines all preference fields into a natural language query
+        for the routing classifier.
+
+        Args:
+            preference: User preference object
+
+        Returns:
+            Query text for routing
+        """
+        parts = []
+
+        # Add use case
+        if preference.primary_use_case:
+            parts.append(f"Primary use: {preference.primary_use_case}")
+
+        # Add music preferences
+        if preference.genres:
+            parts.append(f"Favorite genres: {', '.join(preference.genres[:3])}")
+
+        # Add sound preferences
+        if preference.sound_preferences:
+            sound_prefs = []
+            for key, value in preference.sound_preferences.items():
+                if value > 0.6:  # High preference
+                    sound_prefs.append(f"strong {key}")
+                elif value < 0.4:  # Low preference
+                    sound_prefs.append(f"minimal {key}")
+            if sound_prefs:
+                parts.append(f"Sound preferences: {', '.join(sound_prefs)}")
+
+        # Add budget
+        parts.append(f"Budget: ${preference.budget_min}-${preference.budget_max}")
+
+        # Add feature requirements
+        features = []
+        if preference.wireless_required:
+            features.append("wireless required")
+        if preference.anc_required:
+            features.append("ANC required")
+        if features:
+            parts.append(f"Features: {', '.join(features)}")
+
+        return " | ".join(parts)
+
+    async def _retrieve_context(
+        self,
+        preference: UserPreference,
+        candidates: List[Headphone],
+    ) -> List[Dict[str, Any]]:
+        """
+        Retrieve relevant review chunks for RAG-enhanced recommendations.
+
+        Builds a retrieval query from user preferences and fetches
+        relevant chunks from the vector store.
+
+        Args:
+            preference: User preference object
+            candidates: List of candidate headphones
+
+        Returns:
+            List of retrieved chunk dictionaries
+        """
+        # Build retrieval query from preferences
+        query_parts = []
+
+        if preference.genres:
+            query_parts.append(f"sound quality for {', '.join(preference.genres[:2])}")
+
+        if preference.sound_preferences:
+            prefs = preference.sound_preferences
+            if prefs.get("bass", 0.5) > 0.7:
+                query_parts.append("bass response and low-end extension")
+            if prefs.get("mids", 0.5) > 0.7:
+                query_parts.append("midrange clarity and vocal presence")
+            if prefs.get("treble", 0.5) > 0.7:
+                query_parts.append("treble detail and sparkle")
+            if prefs.get("soundstage", 0.5) > 0.7:
+                query_parts.append("soundstage width and imaging")
+
+        if preference.primary_use_case:
+            query_parts.append(f"performance for {preference.primary_use_case}")
+
+        retrieval_query = " ".join(query_parts) or "overall sound quality and comfort"
+
+        logger.info(
+            "rag_retrieval_started",
+            query=retrieval_query,
+            candidate_count=len(candidates),
+        )
+
+        # Build filters from preference
+        filters = {
+            "budget_min": float(preference.budget_min),
+            "budget_max": float(preference.budget_max),
+            "wireless_required": preference.wireless_required,
+            "anc_required": preference.anc_required,
+        }
+
+        if preference.preferred_type:
+            filters["preferred_type"] = preference.preferred_type
+
+        if not preference.open_back_acceptable:
+            filters["open_back_acceptable"] = False
+
+        # Retrieve chunks
+        try:
+            results = await self.retrieval_engine.retrieve(
+                query=retrieval_query,
+                filters=filters,
+                top_k=settings.rag_top_k,
+                similarity_threshold=settings.rag_similarity_threshold,
+            )
+
+            logger.info(
+                "rag_retrieval_completed",
+                num_chunks=len(results),
+                avg_similarity=sum(r.similarity_score for r in results) / len(results) if results else 0,
+            )
+
+            return [r.to_dict() for r in results]
+
+        except Exception as e:
+            logger.warning(
+                "rag_retrieval_failed_fallback",
+                error=str(e),
+            )
+            # Fallback: return empty context (graceful degradation)
+            return []
 
     async def _track_event(
         self,

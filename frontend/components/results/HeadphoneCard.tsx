@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { HeadphoneMatch } from '@/stores';
 import { getHeadphoneImageUrl, getHeadphoneSearchUrl } from '@/lib/headphoneImages';
+import { Citations } from './Citations';
 
 interface HeadphoneCardProps {
   match: HeadphoneMatch;
@@ -17,7 +18,7 @@ export function HeadphoneCard({ match, isTopPick = false, isInCompare = false, o
   const [isExpanded, setIsExpanded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isImageHovered, setIsImageHovered] = useState(false);
-  const { headphone, scores, explanation, matchHighlights, personalizedPros, personalizedCons } = match;
+  const { headphone, scores, explanation, matchHighlights, personalizedPros, personalizedCons, citations } = match;
 
   const overallScore = Math.round(scores.overall * 100);
 
@@ -242,6 +243,11 @@ export function HeadphoneCard({ match, isTopPick = false, isInCompare = false, o
                     </ul>
                   </div>
                 </div>
+
+                {/* Citations */}
+                {citations && citations.length > 0 && (
+                  <Citations citations={citations} />
+                )}
               </div>
             </motion.div>
           )}

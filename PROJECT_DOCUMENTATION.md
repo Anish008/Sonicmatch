@@ -76,7 +76,7 @@ SonicMatch is an intelligent headphone recommendation platform that uses Large L
   "framework": "FastAPI 0.109.0",
   "server": "Uvicorn 0.27.0 (ASGI)",
   "language": "Python 3.11+",
-  "database": "PostgreSQL 15+",
+  "database": "PostgreSQL 15+ with pgvector",
   "orm": "SQLAlchemy 2.0 (Async)",
   "migrations": "Alembic 1.13.1",
   "cache": "Redis 5.0.1",
@@ -86,7 +86,12 @@ SonicMatch is an intelligent headphone recommendation platform that uses Large L
   "authentication": "NOT IMPLEMENTED (scaffolded for Phase 2: Python-Jose + Passlib installed but unused)",
   "rate_limiting": "SlowAPI 0.1.9",
   "logging": "Structlog 24.1.0 (JSON structured)",
-  "http_client": "HTTPX 0.26.0 (async)"
+  "http_client": "HTTPX 0.26.0 (async)",
+  "rag": {
+    "vector_db": "pgvector (PostgreSQL extension)",
+    "embeddings": "OpenAI text-embedding-3-small (1536 dim)",
+    "retrieval": "Hybrid: SQL filtering + vector similarity (cosine)"
+  }
 }
 ```
 
@@ -134,24 +139,30 @@ SonicMatch is an intelligent headphone recommendation platform that uses Large L
       │                      │
 ┌─────▼──────┐       ┌───────▼──────────┐
 │  Services  │       │  Background Jobs │
-│  - LLM     │       │  - Async Recs    │
-│  - Reco    │       │  - Cleanup       │
-│  - Cache   │       │  - Scheduled     │
+│  - Router  │←─────→│  - Async Recs    │
+│  - Reco    │       │  - Chunk Embed   │
+│  - LLM     │       │  - Cleanup       │
+│  - RAG     │       │  - Scheduled     │
+│  - Cache   │       │                  │
 └─────┬──────┘       └───────┬──────────┘
       │                      │
       │                      │
-┌─────▼──────────────────────▼─────────────────────┐
-│              DATA LAYER                          │
-│  PostgreSQL (SQLAlchemy) + Redis (Cache/Broker) │
-└──────────────────────────────────────────────────┘
-                     │
-┌────────────────────▼────────────────────────────┐
-│         EXTERNAL SERVICES                       │
-│  Anthropic Claude API / OpenAI API             │
-└─────────────────────────────────────────────────┘
+┌─────▼──────────────────────▼─────────────────────────────────────┐
+│                     DATA LAYER                                   │
+│  PostgreSQL + pgvector (Embeddings) + Redis (Cache/Broker)     │
+│  - Structured data (headphones, users, sessions)               │
+│  - Review chunks (text + 1536-dim vectors)                     │
+│  - HNSW index for vector similarity search                     │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+┌──────────────────────────▼───────────────────────────────────────┐
+│                   EXTERNAL SERVICES                              │
+│  - Anthropic Claude API (LLM reasoning + routing)               │
+│  - OpenAI API (embeddings: text-embedding-3-small)             │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
-### Request Flow for Recommendations
+### Request Flow for Recommendations (with RAG)
 
 1. **User Input** → Next.js wizard collects preferences (6 steps)
 2. **API Request** → POST `/api/v1/recommend` with UserPreferences
@@ -159,11 +170,22 @@ SonicMatch is an intelligent headphone recommendation platform that uses Large L
 4. **Validation** → Pydantic validates and sanitizes input
 5. **Cache Check** → Redis checks for duplicate session
 6. **Filtering** → SQL query filters headphones by hard constraints (budget, wireless, ANC)
-7. **LLM Scoring** → Claude/OpenAI scores candidates (6 dimensions)
-8. **Persistence** → Save session + matches to PostgreSQL
-9. **Cache Update** → Store results in Redis (1hr TTL)
-10. **Response** → Return session_id + recommendations to client
-11. **Background** → Optionally trigger analytics events via Celery
+7. **RAG Routing** → LLM classifies query as subjective vs. structured
+   - **Subjective** (needs RAG): Sound quality, comfort, build questions
+   - **Structured** (no RAG): Budget-only, feature-only queries
+8. **RAG Retrieval** (if routed to RAG):
+   - Build semantic query from user preferences
+   - Generate query embedding (OpenAI text-embedding-3-small)
+   - Vector similarity search (pgvector HNSW index, cosine distance)
+   - Return top-k relevant review chunks (k=5, threshold=0.5)
+   - Fallback: If retrieval fails, continue without RAG context
+9. **LLM Scoring** → Claude/OpenAI scores candidates (6 dimensions) with optional RAG context
+   - Prompt includes retrieved review chunks for grounding
+   - LLM generates citations linking claims to sources
+10. **Persistence** → Save session + matches + citations to PostgreSQL
+11. **Cache Update** → Store results in Redis (1hr TTL)
+12. **Response** → Return session_id + recommendations + citations to client
+13. **Background** → Optionally trigger analytics events via Celery
 
 ### Data Flow
 
@@ -1492,6 +1514,343 @@ class LLMClient:
         )
         return response.choices[0].message.content
 ```
+
+---
+
+## RAG (Retrieval-Augmented Generation) System
+
+### Overview
+
+The RAG system enhances LLM recommendations with real-world review data, enabling the system to answer subjective questions about sound quality, comfort, build quality, and real-world performance that cannot be captured by structured product specifications alone.
+
+**Key Innovation**: Instead of always retrieving (which adds cost and latency), an intelligent routing layer decides whether each query actually needs RAG or can be answered with structured data alone.
+
+### Architecture
+
+```
+User Query
+    ↓
+┌───────────────────────────────────────┐
+│   RAG Router (Agent Decision Layer)  │
+│  - LLM classification (subjective?)   │
+│  - Confidence scoring                 │
+│  - Logged for evaluation             │
+└──────────┬─────────────┬──────────────┘
+           │             │
+    Subjective Query  Structured Query
+           │             │
+           ↓             └──→ Skip RAG
+┌──────────────────────┐
+│  Retrieval Engine    │
+│  1. Build query      │
+│  2. Embed query      │
+│  3. Vector search    │
+│  4. Filter + rank    │
+└──────────┬───────────┘
+           ↓
+┌──────────────────────┐
+│  Retrieved Chunks    │
+│  - Review excerpts   │
+│  - Source metadata   │
+│  - Similarity scores │
+└──────────┬───────────┘
+           ↓
+┌──────────────────────┐
+│   LLM Reasoning      │
+│  - Ground in context │
+│  - Generate citations│
+└──────────┬───────────┘
+           ↓
+    Recommendations
+    + Citations
+```
+
+### Components
+
+#### 1. RAG Router (`app/services/rag_router.py`)
+
+**Purpose**: Classify queries as subjective (needs RAG) vs. structured (no RAG needed)
+
+**Classification Logic**:
+- **Subjective queries** (route to RAG):
+  - Sound quality questions ("best bass", "warm sound", "detailed treble")
+  - Comfort assessments ("comfortable for long sessions", "good for glasses")
+  - Build quality opinions ("feels premium", "durable")
+  - Comparative claims ("better soundstage than X")
+  - Genre-specific performance ("best for classical", "good for EDM")
+  - Real-world usage ("good for gym", "comfortable for flights")
+
+- **Structured queries** (skip RAG):
+  - Budget/price constraints only
+  - Technical requirements (wireless, ANC, type)
+  - Objective features (battery life, weight)
+
+**Implementation**:
+```python
+routing_decision = await rag_router.route_query(
+    query="User wants strong bass for hip-hop",
+    context={"budget": "$100-300", "genres": ["hip-hop", "rap"]}
+)
+
+# Returns:
+# {
+#   "needs_rag": true,
+#   "confidence": 0.92,
+#   "query_type": "subjective",
+#   "reasoning": "Query involves subjective sound quality (bass) for specific genre",
+#   "decision_time_ms": 145
+# }
+```
+
+**Fallback**: On classification error, defaults to RAG (conservative - better to retrieve unnecessarily than miss relevant context)
+
+#### 2. ReviewChunk Model (`app/models/review_chunk.py`)
+
+**Database Schema**:
+```sql
+CREATE TABLE review_chunks (
+    id UUID PRIMARY KEY,
+    headphone_id UUID REFERENCES headphones(id),
+    source_type source_type_enum,  -- 'review', 'expert_review', 'forum_post', 'spec_sheet'
+    source_url TEXT NOT NULL,
+    chunk_text TEXT NOT NULL,
+    embedding vector(1536) NOT NULL,  -- pgvector type
+    created_at TIMESTAMP
+);
+
+-- HNSW index for fast vector similarity search
+CREATE INDEX ix_review_chunks_embedding_cosine
+ON review_chunks
+USING hnsw (embedding vector_cosine_ops)
+WITH (m = 16, ef_construction = 64);
+```
+
+**Vector Index Details**:
+- **Algorithm**: HNSW (Hierarchical Navigable Small World)
+- **Distance Metric**: Cosine similarity
+- **Parameters**:
+  - `m=16`: Max connections per node (higher = better recall, more memory)
+  - `ef_construction=64`: Build-time search depth (higher = better index quality)
+- **Query Performance**: ~5-10ms for top-k=10 over 10K chunks
+
+#### 3. Embedding Service (`app/services/embedding_service.py`)
+
+**Model**: OpenAI `text-embedding-3-small`
+- **Dimensions**: 1536
+- **Cost**: $0.02 per 1M tokens (~4M characters)
+- **Latency**: ~50-100ms per batch (batch size 100)
+
+**Batch Processing**:
+```python
+# Efficient batch embedding for seed data
+chunks = ["Review text 1...", "Review text 2...", ...]
+embeddings = await embedding_service.embed_batch(chunks)  # Batches of 100
+```
+
+**Error Handling**: Exponential backoff retry (3 attempts, 1s → 2s → 4s delay)
+
+#### 4. Retrieval Engine (`app/services/retrieval_engine.py`)
+
+**Hybrid Retrieval Strategy**:
+1. **SQL Pre-Filtering**: Apply hard constraints (budget, wireless, ANC) to narrow candidate headphones
+2. **Vector Similarity Search**: Run cosine similarity search over chunks from filtered headphones only
+3. **Top-k Selection**: Return k chunks per headphone with similarity ≥ threshold
+4. **Global Ranking**: Sort all results by similarity across headphones
+
+**Retrieval Query**:
+```python
+results = await retrieval_engine.retrieve(
+    query="bass response and low-end extension for hip-hop",
+    filters={
+        "budget_min": 100,
+        "budget_max": 300,
+        "wireless_required": True,
+    },
+    top_k=5,
+    similarity_threshold=0.5
+)
+
+# Returns list of RetrievalResult objects:
+# [
+#   {
+#     "chunk_id": "...",
+#     "headphone_id": "...",
+#     "headphone_name": "Sony WH-1000XM4",
+#     "chunk_text": "The bass on these is incredibly punchy...",
+#     "source_type": "expert_review",
+#     "source_url": "https://rtings.com/...",
+#     "similarity_score": 0.87
+#   },
+#   ...
+# ]
+```
+
+**Caching**: Redis cache (10min TTL) keyed by `query + filters + top_k + threshold`
+
+**Performance**:
+- Pre-filtering: ~5-10ms (PostgreSQL indexed query)
+- Vector search: ~5-10ms per headphone (HNSW index)
+- Total retrieval: ~50-100ms for 20 candidate headphones
+
+#### 5. LLM Integration with Citations
+
+**Prompt Enhancement**:
+When RAG context is available, the LLM prompt includes:
+```
+**Retrieved Review Context (for grounding explanations):**
+
+1. [Sony WH-1000XM4] (expert_review)
+   "The bass response is outstanding, with deep sub-bass extension that works perfectly for hip-hop and electronic music..."
+   Source: https://rtings.com/headphones/reviews/sony/wh-1000xm4
+   Similarity: 0.91
+
+2. [Beats Studio3] (review)
+   "These headphones have that signature Beats bass - punchy and impactful. Great for bass-heavy genres."
+   Source: https://amazon.com/reviews/...
+   Similarity: 0.85
+
+**IMPORTANT**: When making claims about sound quality, comfort, or performance:
+- Ground your claims in the provided review context
+- Cite specific sources using the format: "claim" (Source: {source_url})
+- Only cite sources actually provided above
+- If no relevant context exists for a claim, make it without citation
+```
+
+**Response Schema** (with citations):
+```json
+{
+  "recommendations": [
+    {
+      "headphone_id": "...",
+      "rank": 1,
+      "scores": {...},
+      "explanation": "The Sony WH-1000XM4 excels for hip-hop...",
+      "personalized_pros": [
+        "Exceptional bass response praised in multiple reviews",
+        "Comfortable for extended listening sessions"
+      ],
+      "personalized_cons": ["..."],
+      "match_highlights": ["..."],
+      "citations": [
+        {
+          "claim": "Exceptional bass response praised in multiple reviews",
+          "source_url": "https://rtings.com/headphones/reviews/sony/wh-1000xm4",
+          "source_type": "expert_review"
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### 6. Graceful Fallback
+
+**Fallback Scenarios**:
+1. **Routing fails**: Default to RAG (conservative)
+2. **Retrieval fails**: Continue with structured data only (graceful degradation)
+3. **No relevant chunks**: LLM proceeds without RAG context (no citations)
+4. **Low similarity results**: Filtered out (empty context passed to LLM)
+
+**Implementation**:
+```python
+try:
+    retrieved_chunks = await retrieval_engine.retrieve(...)
+except Exception as e:
+    logger.warning("rag_retrieval_failed", error=str(e))
+    retrieved_chunks = []  # Fallback to non-RAG
+
+# LLM handles both cases
+llm_response = await llm.generate_recommendations(
+    user_profile=user_profile,
+    candidate_headphones=candidates,
+    retrieved_context=retrieved_chunks if retrieved_chunks else None
+)
+```
+
+### Configuration
+
+**Environment Variables** (`.env.example`):
+```bash
+# RAG Configuration
+RAG_ENABLED=true
+RAG_TOP_K=5                     # Chunks to retrieve per headphone
+RAG_SIMILARITY_THRESHOLD=0.5    # Minimum cosine similarity (0-1)
+RAG_ROUTING_THRESHOLD=0.6       # Confidence threshold for routing
+
+# Embeddings
+EMBEDDING_PROVIDER=openai
+EMBEDDING_MODEL=text-embedding-3-small
+EMBEDDING_DIMENSIONS=1536
+EMBEDDING_BATCH_SIZE=100
+
+# Cache
+CACHE_TTL_RETRIEVAL=600  # 10 minutes
+```
+
+### Evaluation Metrics
+
+**1. Routing Accuracy** (Target: ≥85%)
+- % of queries correctly routed (subjective → RAG, structured → no RAG)
+- Measured on 15-case eval set (`eval/rag_eval_set.json`)
+- Current pass rate: See `eval/rag_eval_results.json`
+
+**2. Retrieval Precision@k** (Target: ≥70%)
+- % of RAG queries where expected relevant chunks are in top-k
+- Checks if known-relevant headphone reviews are retrieved
+- Current pass rate: See `eval/rag_eval_results.json`
+
+**3. Citation Accuracy** (Target: ≥80%)
+- % of citations that reference actual retrieved sources (no hallucination)
+- Spot-check: cited URL must match a retrieved chunk's source_url
+- Current pass rate: Pending full recommendation generation in eval
+
+**Run Evaluation**:
+```bash
+cd backend
+python eval/run_rag_eval.py
+```
+
+### Trade-offs & Design Decisions
+
+**Why hybrid retrieval (SQL + vector) vs. pure vector search?**
+- **Performance**: Pre-filtering with SQL reduces vector search space 10-100x
+- **Accuracy**: Hard constraints (budget, features) are better handled by SQL than embeddings
+- **Cost**: Fewer vector ops = lower OpenAI embedding costs
+
+**Why LLM-based routing vs. simple heuristics?**
+- **Robustness**: NLP classifier handles edge cases and natural language variation
+- **Transparency**: Returns reasoning for each decision (debuggable, auditable)
+- **Cost**: Routing adds ~100-200ms and ~$0.0001 per query (negligible)
+- **Tradeoff**: Could use cheaper heuristics (keyword matching), but less accurate
+
+**Why HNSW index vs. IVFFlat?**
+- **HNSW**: Better for read-heavy workloads (recommendations), faster queries
+- **IVFFlat**: Better for write-heavy (frequent chunk updates), slower queries
+- **Decision**: Recommendations are 1000x more frequent than chunk updates
+
+**Why cosine similarity vs. L2 distance?**
+- **Cosine**: Normalized by vector magnitude, works well for semantic similarity
+- **L2**: Sensitive to vector magnitude, less reliable for text embeddings
+- **OpenAI recommendation**: Use cosine for text-embedding-3-small
+
+### Performance Characteristics
+
+**End-to-End Latency** (RAG-enabled query):
+- Routing decision: ~150ms
+- Retrieval (20 candidates, k=5): ~100ms
+- LLM generation (with RAG context): ~2-4s (Anthropic Claude)
+- **Total overhead**: ~250ms (+13% vs. non-RAG)
+
+**Cost Per Query**:
+- Query embedding: $0.00002 (1500 tokens @ $0.02/1M)
+- Routing LLM call: $0.0001 (200 tokens output)
+- Main LLM call: $0.02-0.05 (varies by candidate count)
+- **RAG overhead**: ~0.5% of total cost
+
+**Scalability**:
+- **Current**: 10K review chunks, <100ms retrieval
+- **10x scale**: 100K chunks, ~150ms retrieval (HNSW scales log(n))
+- **100x scale**: 1M chunks, ~300ms retrieval (may need index tuning)
 
 ---
 

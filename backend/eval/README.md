@@ -168,6 +168,134 @@ pip install asyncpg
 - Check LLM provider API status
 - Verify API key is valid
 
+## RAG Evaluation
+
+### Overview
+
+The RAG (Retrieval-Augmented Generation) evaluation tests the system's ability to:
+1. **Route queries correctly**: Identify which queries need retrieval vs. structured filtering
+2. **Retrieve relevant content**: Find review chunks that actually address the user's query
+3. **Cite sources accurately**: Ensure citations reference real, retrieved sources
+
+### Files
+
+- **`rag_eval_set.json`**: 15 test cases for RAG system (10 subjective/hybrid, 5 structured)
+- **`run_rag_eval.py`**: RAG evaluation script with three key metrics
+- **`rag_eval_results.json`**: Generated results (created after running)
+
+### Test Case Types
+
+**Subjective queries** (should route to RAG):
+- Sound quality questions ("best bass", "warm sound")
+- Comfort assessments ("comfortable for long sessions")
+- Build quality opinions ("durable", "premium feel")
+- Genre-specific performance ("good for classical")
+
+**Structured queries** (should NOT route to RAG):
+- Budget-only ("under $200")
+- Feature requirements ("wireless + ANC")
+- Technical specs ("over-ear, open-back")
+
+**Hybrid queries** (should route to RAG):
+- Mix of technical + subjective ("wireless for gym with good durability")
+
+### Running RAG Evaluation
+
+```bash
+cd backend
+python eval/run_rag_eval.py
+```
+
+### Metrics
+
+**1. Routing Accuracy (Target: ≥85%)**
+- Measures whether the router correctly identifies RAG-needed vs. structured queries
+- Pass: Query routed correctly (subjective → RAG, structured → no RAG)
+- Fail: Query misrouted (could miss relevant context or waste retrieval)
+
+**2. Retrieval Precision@k (Target: ≥70%)**
+- For RAG-routed queries, checks if expected relevant chunks are in top-k results
+- Pass: At least 50% of expected relevant headphone chunks retrieved
+- Fail: Missing key relevant sources
+
+**3. Citation Accuracy (Target: ≥80%)**
+- Spot-checks that cited sources actually exist in retrieved chunks
+- Pass: At least 80% of citations reference real retrieved sources
+- Fail: Hallucinated or fabricated citations
+
+### Example Output
+
+```
+================================================================================
+SonicMatch RAG System Evaluation
+================================================================================
+
+Loaded 15 RAG test cases from rag_eval_set.json
+
+[subjective_bass_01] User asking about bass quality for hip-hop
+  Query type: subjective
+  Routing: ✓ PASS
+    Expected RAG: True, Actual: True
+    Confidence: 0.92, Type: subjective
+  Retrieval Precision@k: ✓ PASS
+    Precision: 1.00 (2 expected)
+    Matches: sony-wh-1000xm4, beats-studio3
+
+[structured_wireless_anc_06] Purely technical requirements: wireless + ANC under $200
+  Query type: structured
+  Routing: ✓ PASS
+    Expected RAG: False, Actual: False
+    Confidence: 0.95, Type: structured
+
+... (13 more test cases)
+
+================================================================================
+RAG EVALUATION SUMMARY
+================================================================================
+
+Total test cases:           15
+
+1. Routing Accuracy:        13/15 (86.7%)
+   - Target: ≥85% (route queries correctly)
+
+2. Retrieval Precision@k:   8/10 (80.0%)
+   - Target: ≥70% (retrieve relevant chunks)
+
+3. Citation Accuracy:       Pending (requires full recommendation)
+   - Target: ≥80% (cite real sources)
+
+Overall Pass Rate:          12/15 (80.0%)
+   - Target: ≥70%
+
+Detailed results saved to rag_eval_results.json
+
+================================================================================
+✓ RAG EVALUATION PASSED
+================================================================================
+```
+
+### Interpreting RAG Results
+
+**High routing accuracy (>90%)**
+- Router correctly distinguishes subjective vs. structured queries
+- LLM-based classification is working well
+- Low false positives/negatives
+
+**Low routing accuracy (<80%)**
+- Router prompt may need tuning
+- Threshold (rag_routing_threshold) may need adjustment
+- Consider adding more examples to routing prompt
+
+**High retrieval precision (>80%)**
+- Vector embeddings capturing semantic meaning well
+- Similarity threshold set appropriately
+- Review chunks well-written and indexed
+
+**Low retrieval precision (<60%)**
+- May need more/better review chunks in database
+- Embedding model may not capture domain-specific terminology
+- Similarity threshold may be too high (excluding relevant results)
+
 ## Future Improvements
 
 - **Expand test set**: Add more edge cases (IEMs, on-ear, specific brands)
@@ -176,3 +304,5 @@ pip install asyncpg
 - **Negative tests**: Impossible requirements (e.g., open-back with ANC)
 - **Regression tracking**: Store historical pass rates to detect degradation
 - **CI/CD integration**: Run on every PR to prevent recommendation quality regressions
+- **Citation accuracy automation**: Generate full recommendations in eval to measure citation accuracy
+- **RAG performance tracking**: Monitor retrieval latency and cost per query

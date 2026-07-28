@@ -42,6 +42,19 @@ class Settings(BaseSettings):
     llm_temperature: float = Field(default=0.7, description="LLM temperature")
     llm_timeout: int = Field(default=30, description="LLM request timeout in seconds")
 
+    # Embedding Configuration (RAG)
+    embedding_provider: str = Field(default="openai", description="Embedding provider (currently only openai supported)")
+    embedding_model: str = Field(default="text-embedding-3-small", description="Embedding model to use")
+    embedding_dimensions: int = Field(default=1536, description="Embedding vector dimensions")
+    embedding_batch_size: int = Field(default=100, description="Batch size for embedding generation")
+
+    # RAG Configuration
+    rag_enabled: bool = Field(default=True, description="Enable RAG retrieval layer")
+    rag_top_k: int = Field(default=5, description="Number of chunks to retrieve per headphone")
+    rag_similarity_threshold: float = Field(default=0.5, description="Minimum similarity score for retrieval")
+    rag_routing_threshold: float = Field(default=0.6, description="Threshold for routing query to RAG (0-1)")
+    cache_ttl_retrieval: int = Field(default=600, description="RAG retrieval cache TTL (10 minutes)")
+
     # CORS
     cors_origins: str | List[str] = Field(
         default="http://localhost:3000",

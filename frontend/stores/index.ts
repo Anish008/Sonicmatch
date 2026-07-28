@@ -60,6 +60,12 @@ export interface UserPreferences {
   additionalNotes: string;
 }
 
+export interface Citation {
+  claim: string;
+  sourceUrl: string;
+  sourceType: 'review' | 'expert_review' | 'forum_post' | 'spec_sheet';
+}
+
 export interface HeadphoneMatch {
   id: string;
   rank: number;
@@ -94,6 +100,7 @@ export interface HeadphoneMatch {
   personalizedPros: string[];
   personalizedCons: string[];
   matchHighlights: string[];
+  citations?: Citation[];
 }
 
 export interface RecommendationSession {

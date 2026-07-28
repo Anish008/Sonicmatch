@@ -55,6 +55,7 @@ class LLMClient:
         user_profile: Dict[str, Any],
         candidate_headphones: List[Dict[str, Any]],
         top_n: int = 5,
+        retrieved_context: List[Dict[str, Any]] | None = None,
     ) -> Dict[str, Any]:
         """
         Generate headphone recommendations using LLM.
@@ -63,13 +64,14 @@ class LLMClient:
             user_profile: User preferences and requirements
             candidate_headphones: List of headphones matching hard constraints
             top_n: Number of top recommendations to return
+            retrieved_context: Optional RAG-retrieved review chunks for grounding
 
         Returns:
             Dictionary with recommendations, scores, and explanations
         """
-        # Build prompt
+        # Build prompt (with optional RAG context)
         prompt = self._build_recommendation_prompt(
-            user_profile, candidate_headphones, top_n
+            user_profile, candidate_headphones, top_n, retrieved_context
         )
 
         # Call LLM with retry
@@ -106,6 +108,7 @@ class LLMClient:
         user_profile: Dict[str, Any],
         headphone: Dict[str, Any],
         other_headphones: List[Dict[str, Any]],
+        retrieved_context: List[Dict[str, Any]] | None = None,
     ) -> Dict[str, Any]:
         """
         Generate detailed explanation for a specific headphone recommendation.
@@ -114,11 +117,14 @@ class LLMClient:
             user_profile: User preferences
             headphone: The headphone to explain
             other_headphones: Other recommended headphones for comparison
+            retrieved_context: Optional RAG-retrieved review chunks
 
         Returns:
-            Dictionary with detailed explanation and comparison points
+            Dictionary with detailed explanation, comparison points, and citations
         """
-        prompt = self._build_explanation_prompt(user_profile, headphone, other_headphones)
+        prompt = self._build_explanation_prompt(
+            user_profile, headphone, other_headphones, retrieved_context
+        )
 
         try:
             response = await self._call_llm_with_retry(
@@ -144,6 +150,58 @@ class LLMClient:
                 provider=self.provider,
             )
             raise LLMException(f"Failed to generate explanation: {str(e)}")
+
+    async def call_llm_raw(
+        self,
+        user_prompt: str,
+        system_prompt: str,
+        max_tokens: int = None,
+        temperature: float = None,
+        json_mode: bool = False,
+    ) -> str:
+        """
+        Make a raw LLM API call with custom parameters.
+
+        Useful for lightweight tasks like classification, routing, etc.
+        that don't fit the standard recommendation/explanation flow.
+
+        Args:
+            user_prompt: User/main prompt
+            system_prompt: System instructions
+            max_tokens: Override default max tokens
+            temperature: Override default temperature
+            json_mode: Whether to request JSON output
+
+        Returns:
+            Raw LLM response text
+
+        Raises:
+            LLMException: If LLM call fails
+        """
+        # Store original settings
+        original_max_tokens = self.max_tokens
+        original_temperature = self.temperature
+
+        try:
+            # Apply overrides
+            if max_tokens is not None:
+                self.max_tokens = max_tokens
+            if temperature is not None:
+                self.temperature = temperature
+
+            # Call LLM
+            response = await self._call_llm_with_retry(
+                prompt=user_prompt,
+                system_prompt=system_prompt,
+                json_mode=json_mode,
+            )
+
+            return response
+
+        finally:
+            # Restore original settings
+            self.max_tokens = original_max_tokens
+            self.temperature = original_temperature
 
     async def _call_llm_with_retry(
         self,
@@ -282,8 +340,20 @@ Your task is to provide personalized, accurate headphone recommendations based o
         user_profile: Dict[str, Any],
         candidates: List[Dict[str, Any]],
         top_n: int,
+        retrieved_context: List[Dict[str, Any]] | None = None,
     ) -> str:
-        """Build prompt for recommendation generation."""
+        """
+        Build prompt for recommendation generation.
+
+        Args:
+            user_profile: User preferences
+            candidates: Candidate headphones
+            top_n: Number of recommendations
+            retrieved_context: Optional RAG-retrieved chunks
+
+        Returns:
+            Formatted prompt string
+        """
         # Extract user preferences
         genres = ", ".join(user_profile.get("genres", []))
         artists = ", ".join(user_profile.get("favorite_artists", [])[:5])
@@ -304,6 +374,18 @@ Your task is to provide personalized, accurate headphone recommendations based o
             candidates_text += f"   - Key Features: {', '.join(hp.get('key_features', []))}\n"
             candidates_text += f"   - Target Genres: {', '.join(hp.get('target_genres', []))}\n"
 
+        # Add RAG context if available
+        rag_context_text = ""
+        if retrieved_context:
+            rag_context_text = "\n**Retrieved Review Context (for grounding explanations):**\n"
+            rag_context_text += "The following review excerpts provide real-world insights. Use them to support your recommendations:\n\n"
+
+            for i, chunk in enumerate(retrieved_context[:10], 1):  # Limit to top 10 chunks
+                rag_context_text += f"{i}. [{chunk['headphone_name']}] ({chunk['source_type']})\n"
+                rag_context_text += f"   \"{chunk['chunk_text'][:200]}...\"\n"
+                rag_context_text += f"   Source: {chunk['source_url']}\n"
+                rag_context_text += f"   Similarity: {chunk['similarity_score']:.2f}\n\n"
+
         prompt = f"""**User Profile:**
 - **Favorite Genres**: {genres}
 - **Favorite Artists**: {artists if artists else "Not specified"}
@@ -318,7 +400,7 @@ Your task is to provide personalized, accurate headphone recommendations based o
 
 **Candidate Headphones:**
 {candidates_text}
-
+{rag_context_text}
 **Task:**
 Analyze the user's profile and rank the top {top_n} headphones from the candidates above. For each recommended headphone, provide:
 
@@ -368,7 +450,7 @@ Analyze the user's profile and rank the top {top_n} headphones from the candidat
 4. **Personalized Pros** (2-3 points): Benefits specific to this user
 5. **Personalized Cons** (1-2 points): Drawbacks specific to this user
 6. **Match Highlights** (3 points): Key reasons for the match
-
+{citation_instructions}
 Return the response as a JSON array with this exact structure:
 {{
   "recommendations": [
@@ -386,12 +468,43 @@ Return the response as a JSON array with this exact structure:
       "explanation": "...",
       "personalized_pros": ["...", "...", "..."],
       "personalized_cons": ["...", "..."],
-      "match_highlights": ["...", "...", "..."]
+      "match_highlights": ["...", "...", "..."]{citation_schema}
     }}
   ]
 }}
 
 Ensure scores are realistic and relative to the user's needs. Sort by overall score descending."""
+
+        # Add citation instructions if RAG context is available
+        if retrieved_context:
+            citation_instructions = f"""
+
+7. **Citations**: When making claims about sound quality, comfort, build quality, or real-world performance:
+   - MUST cite the retrieved review excerpts provided above
+   - Each citation should reference which headphone review it came from
+   - Include the source type (review, expert_review, forum_post, spec_sheet)
+   - DO NOT make up citations - only cite the provided context
+   - If no relevant context exists for a claim, you can make it without citation
+   - Format: "claim text" (citing Source #{citation_number})
+"""
+            citation_schema = """,
+      "citations": [
+        {{
+          "claim": "Specific claim made in explanation or pros/cons",
+          "source_chunk_id": "chunk ID from retrieved context (if available)",
+          "source_url": "URL from retrieved context",
+          "source_type": "review|expert_review|forum_post|spec_sheet"
+        }}
+      ]"""
+        else:
+            citation_instructions = ""
+            citation_schema = ""
+
+        # Format prompt with optional citation instructions
+        prompt = prompt.format(
+            citation_instructions=citation_instructions,
+            citation_schema=citation_schema,
+        )
 
         return prompt
 
@@ -400,8 +513,46 @@ Ensure scores are realistic and relative to the user's needs. Sort by overall sc
         user_profile: Dict[str, Any],
         headphone: Dict[str, Any],
         others: List[Dict[str, Any]],
+        retrieved_context: List[Dict[str, Any]] | None = None,
     ) -> str:
-        """Build prompt for detailed explanation."""
+        """
+        Build prompt for detailed explanation.
+
+        Args:
+            user_profile: User preferences
+            headphone: Target headphone
+            others: Other recommendations
+            retrieved_context: Optional RAG context
+
+        Returns:
+            Formatted prompt string
+        """
+        # Add RAG context if available
+        rag_context_text = ""
+        citation_instructions = ""
+        citation_schema = ""
+
+        if retrieved_context:
+            rag_context_text = "\n**Retrieved Review Context:**\n"
+            for i, chunk in enumerate(retrieved_context[:5], 1):
+                rag_context_text += f"{i}. ({chunk['source_type']})\n"
+                rag_context_text += f"   \"{chunk['chunk_text'][:300]}...\"\n"
+                rag_context_text += f"   Source: {chunk['source_url']}\n\n"
+
+            citation_instructions = """
+**Citation Requirement:**
+When making specific claims about sound quality, comfort, or performance, cite the retrieved review context above.
+Format each citation with the source number and type."""
+
+            citation_schema = """,
+  "citations": [
+    {
+      "claim": "Specific claim from the explanation",
+      "source_url": "URL from retrieved context",
+      "source_type": "review|expert_review|forum_post|spec_sheet"
+    }
+  ]"""
+
         prompt = f"""**User Profile:**
 - Genres: {', '.join(user_profile.get('genres', []))}
 - Sound Preferences: Bass={user_profile.get('sound_preferences', {}).get('bass', 0.5):.1f}, Mids={user_profile.get('sound_preferences', {}).get('mids', 0.5):.1f}, Treble={user_profile.get('sound_preferences', {}).get('treble', 0.5):.1f}
@@ -414,20 +565,20 @@ Ensure scores are realistic and relative to the user's needs. Sort by overall sc
 
 **Other Recommendations:**
 {', '.join([h['full_name'] for h in others[:3]])}
-
+{rag_context_text}
 **Task:**
 Provide a detailed explanation (4-5 sentences) of why {headphone['full_name']} is recommended for this user. Include:
 1. How it matches their music taste and sound preferences
 2. Why it's ideal for their use case
 3. How it compares to the other recommendations
 4. Value proposition
-
+{citation_instructions}
 Also provide 3-5 specific comparison points against the alternatives.
 
 Return as JSON:
 {{
   "detailed_explanation": "...",
-  "comparison_points": ["...", "...", "..."]
+  "comparison_points": ["...", "...", "..."]{citation_schema}
 }}"""
 
         return prompt

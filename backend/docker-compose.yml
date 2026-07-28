@@ -57,9 +57,9 @@ services:
     networks:
       - sonicmatch-network
 
-  # PostgreSQL database
+  # PostgreSQL database with pgvector
   postgres:
-    image: postgres:15-alpine
+    image: pgvector/pgvector:pg15
     container_name: sonicmatch-postgres
     environment:
       - POSTGRES_DB=sonicmatch
@@ -69,6 +69,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-pgvector.sql:/docker-entrypoint-initdb.d/init-pgvector.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U sonicmatch"]
       interval: 10s

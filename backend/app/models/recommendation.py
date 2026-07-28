@@ -75,12 +75,13 @@ class RecommendationSession(Base, UUIDMixin, TimestampMixin):
     #     back_populates="recommendation_sessions"
     # )
 
-    # matches: Mapped[List["HeadphoneMatch"]] = relationship(
-    #     "HeadphoneMatch",
-    #     back_populates="session",
-    #     cascade="all, delete-orphan",
-    #     order_by="HeadphoneMatch.rank"
-    # )
+    matches: Mapped[List["HeadphoneMatch"]] = relationship(
+        "HeadphoneMatch",
+        back_populates="session",
+        cascade="all, delete-orphan",
+        order_by="HeadphoneMatch.rank",
+        lazy="selectin"
+    )
 
     # Indexes for querying
     __table_args__ = (
@@ -181,12 +182,17 @@ class HeadphoneMatch(Base, UUIDMixin, TimestampMixin):
         nullable=False,
         default=list,
     )
+    citations: Mapped[Optional[List[dict]]] = mapped_column(
+        JSON,
+        nullable=True,
+        default=list,
+    )
 
     # Relationships
-    # session: Mapped["RecommendationSession"] = relationship(
-    #     "RecommendationSession",
-    #     back_populates="matches"
-    # )
+    session: Mapped["RecommendationSession"] = relationship(
+        "RecommendationSession",
+        back_populates="matches"
+    )
     # headphone: Mapped["Headphone"] = relationship(
     #     "Headphone",
     #     back_populates="matches"
@@ -220,4 +226,5 @@ class HeadphoneMatch(Base, UUIDMixin, TimestampMixin):
             "personalized_pros": self.personalized_pros,
             "personalized_cons": self.personalized_cons,
             "match_highlights": self.match_highlights,
+            "citations": self.citations or [],
         }
