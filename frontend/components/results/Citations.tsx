@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import type { Citation } from '@/stores';
 
@@ -14,7 +15,7 @@ const sourceTypeDisplay: Record<Citation['sourceType'], { label: string; icon: s
   spec_sheet: { label: 'Spec Sheet', icon: '📄', color: 'text-yellow-400' },
 };
 
-export function Citations({ citations }: CitationsProps) {
+export const Citations = memo(function Citations({ citations }: CitationsProps) {
   if (!citations || citations.length === 0) {
     return null;
   }
@@ -101,4 +102,4 @@ export function Citations({ citations }: CitationsProps) {
       </div>
     </div>
   );
-}
+});

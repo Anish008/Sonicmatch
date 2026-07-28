@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo, useMemo, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { HeadphoneMatch } from '@/stores';
@@ -14,30 +14,37 @@ interface HeadphoneCardProps {
   onCompareToggle?: () => void;
 }
 
-export function HeadphoneCard({ match, isTopPick = false, isInCompare = false, onCompareToggle }: HeadphoneCardProps) {
+export const HeadphoneCard = memo(function HeadphoneCard({ match, isTopPick = false, isInCompare = false, onCompareToggle }: HeadphoneCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isImageHovered, setIsImageHovered] = useState(false);
   const { headphone, scores, explanation, matchHighlights, personalizedPros, personalizedCons, citations } = match;
 
-  const overallScore = Math.round(scores.overall * 100);
+  const overallScore = useMemo(() => Math.round(scores.overall * 100), [scores.overall]);
 
   // Map headphoneType to display type
-  const typeMap: Record<string, string> = {
-    'over_ear': 'over-ear',
-    'on_ear': 'on-ear',
-    'in_ear': 'in-ear',
-    'earbuds': 'earbuds',
-  };
-  const displayType = typeMap[headphone.headphoneType] || 'over-ear';
+  const displayType = useMemo(() => {
+    const typeMap: Record<string, string> = {
+      'over_ear': 'over-ear',
+      'on_ear': 'on-ear',
+      'in_ear': 'in-ear',
+      'earbuds': 'earbuds',
+    };
+    return typeMap[headphone.headphoneType] || 'over-ear';
+  }, [headphone.headphoneType]);
 
   // Use imageUrl from headphone data if available, skip broken rtings.com URLs
-  const primaryImage = (headphone.imageUrl &&
-    headphone.imageUrl.startsWith('http') &&
-    !headphone.imageUrl.includes('rtings.com'))
-    ? headphone.imageUrl
-    : getHeadphoneImageUrl(headphone.brand, headphone.model, displayType);
-  const searchUrl = getHeadphoneSearchUrl(headphone.brand, headphone.model);
+  const primaryImage = useMemo(() =>
+    (headphone.imageUrl &&
+      headphone.imageUrl.startsWith('http') &&
+      !headphone.imageUrl.includes('rtings.com'))
+      ? headphone.imageUrl
+      : getHeadphoneImageUrl(headphone.brand, headphone.model, displayType)
+  , [headphone.imageUrl, headphone.brand, headphone.model, displayType]);
+
+  const searchUrl = useMemo(() =>
+    getHeadphoneSearchUrl(headphone.brand, headphone.model)
+  , [headphone.brand, headphone.model]);
 
   return (
     <motion.div
@@ -311,4 +318,4 @@ export function HeadphoneCard({ match, isTopPick = false, isInCompare = false, o
       </div>
     </motion.div>
   );
-}
+});

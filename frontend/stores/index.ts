@@ -322,12 +322,9 @@ export const useRecommendationsStore = create<RecommendationsState>()(
         setError: (error) => set({ error, isLoading: false }),
 
         addToCompare: (id) => set((state) => {
-          console.log('Adding to compare:', id, 'Current list:', state.compareList);
           if (state.compareList.includes(id)) return state;
           if (state.compareList.length >= 4) return state;
-          const newList = [...state.compareList, id];
-          console.log('New compare list:', newList);
-          return { compareList: newList };
+          return { compareList: [...state.compareList, id] };
         }),
 
         removeFromCompare: (id) => set((state) => ({
