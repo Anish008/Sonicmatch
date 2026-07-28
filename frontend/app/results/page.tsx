@@ -9,7 +9,7 @@ import { Navigation } from '@/components/layout/Navigation';
 import { HeadphoneCard } from '@/components/results/HeadphoneCard';
 import { SoundProfileChart } from '@/components/results/SoundProfileChart';
 import { ResultsSkeleton } from '@/components/results/ResultsSkeleton';
-import { findHeadphoneMatches } from '@/lib/matchingAlgorithm';
+import { getRecommendations } from '@/lib/api';
 import { useHydration } from '@/hooks/useHydration';
 
 export default function ResultsPage() {
@@ -26,28 +26,30 @@ export default function ResultsPage() {
     }
   }, [isComplete, router]);
 
-  // Load real recommendations based on user preferences
+  // Load real recommendations from backend API
   useEffect(() => {
     if (!isComplete) return;
 
     setLoading(true);
     const startTime = Date.now();
 
-    // Find matching headphones using the real algorithm
-    findHeadphoneMatches(preferences)
-      .then((matches) => {
+    // Call backend API for recommendations (much faster than client-side)
+    getRecommendations(preferences)
+      .then((response: any) => {
         const processingTime = Date.now() - startTime;
+
+        // Backend returns session with matches
         setSession({
-          id: 'session-' + Date.now(),
+          id: response.sessionId || 'session-' + Date.now(),
           status: 'complete',
-          recommendations: matches,
-          createdAt: new Date().toISOString(),
-          processingTimeMs: processingTime,
+          recommendations: response.matches || [],
+          createdAt: response.createdAt || new Date().toISOString(),
+          processingTimeMs: response.processingTimeMs || processingTime,
         });
         setIsInitialLoad(false);
       })
       .catch((error) => {
-        console.error('Error finding matches:', error);
+        console.error('Error getting recommendations:', error);
         // Fallback to empty recommendations on error
         setSession({
           id: 'session-' + Date.now(),

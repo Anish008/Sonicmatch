@@ -27,7 +27,29 @@ export default function BrowsePage() {
   useEffect(() => {
     const loadHeadphones = async () => {
       try {
-        const response = await fetch('/api/headphones');
+        // Try backend API first (faster with database), fallback to local API
+        const backendURL = process.env.NEXT_PUBLIC_API_URL;
+        let response;
+
+        if (backendURL) {
+          try {
+            response = await fetch(`${backendURL}/headphones`, {
+              next: { revalidate: 300 }, // Cache for 5 minutes
+            });
+            if (response.ok) {
+              const data = await response.json();
+              setHeadphones(data || []);
+              setFilteredHeadphones(data || []);
+              setLoading(false);
+              return;
+            }
+          } catch (backendError) {
+            console.warn('Backend API unavailable, falling back to local data');
+          }
+        }
+
+        // Fallback to local API (now with caching)
+        response = await fetch('/api/headphones');
         const data = await response.json();
         setHeadphones(data.headphones || []);
         setFilteredHeadphones(data.headphones || []);
